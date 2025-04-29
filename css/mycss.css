@@ -1,0 +1,17 @@
+.dark-bg {
+    background-color: #262121;
+}
+
+.black-bg {
+    background-color: black;
+}
+
+.search-btn {
+    background-color: yellow;
+    color: black;
+}
+
+.search-btn:hover {
+    background-color: black;
+    color: white;
+}
