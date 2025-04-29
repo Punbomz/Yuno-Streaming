@@ -1,4 +1,5 @@
 <?php require('connect.php') ?>
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -14,11 +15,10 @@
 </head>
 
 <body class="dark-bg">
-    <?php require('navbar.php') ?>
+    <?php require('admin_navbar.php') ?>
 
     <script src="js/bootstrap.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
-    <?php require('footer.php'); ?>
 
 </body>
 </html>

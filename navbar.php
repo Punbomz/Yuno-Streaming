@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg black-bg">
+<nav class="navbar fixed-top navbar-expand-lg black-bg">
   <div class="container-fluid">
     <a class="navbar-brand text-white" href="index.php">Yuno</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,19 +30,24 @@
         </div>
     </form>
 
-    <div class="" style="margin-right: 10px;">
-        <img src="#" class="img-thumbnail" style="width: 40px; height: 40px;">
-    </div>
-
-    <div class="dropdown" style="margin-right: 10px;">
-        <a class="dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-        <ul class="dropdown-menu dropdown-menu-end mt-4">
-            <li><a class="dropdown-item" href="#">โปรไฟล์</a></li>
-            <li><a class="dropdown-item" href="#">ออกจากระบบ</a></li>
-        </ul>
-    </div>
-
+    <?php if(!isset($_SESSION['logined'])) { ?>
+        <a class="btn btn-outline-warning" href="login.php">
+            เข้าสู่ระบบ
+        </a>
+    <?php } else { ?>
+        <div class="" style="margin-right: 10px;">
+            <img src="#" class="img-thumbnail" style="width: 40px; height: 40px;">
+        </div>
+        <div class="dropdown" style="margin-right: 10px;">
+            <a class="dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+            <ul class="dropdown-menu dropdown-menu-end mt-4">
+                <li><a class="dropdown-item" href="#">โปรไฟล์</a></li>
+                <li><a class="dropdown-item" href="logout.php">ออกจากระบบ</a></li>
+            </ul>
+        </div>
+    <?php } ?>
 
     </div>
   </div>
 </nav>
+<br><br><br>
