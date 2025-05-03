@@ -1,5 +1,6 @@
+<?php if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) { ?>
+    
 <?php require('connect.php') ?>
-
 <!DOCTYPE html>
 <html lang="th">
 
@@ -22,3 +23,5 @@
 
 </body>
 </html>
+
+<?php } else { header("Location: index.php"); } ?>
