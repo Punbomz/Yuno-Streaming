@@ -58,7 +58,7 @@
       <div class="row justify-content-center mt-4">
         <div class="d-flex justify-content-between align-items-center" style="width: 450px;">
           <span>มีบัญชีแล้ว?</span>
-          <a href="register.php" class="btn btn-secondary m-2 text-black" style="width: 150px; background-color: white;">เข้าสู่ระบบ</a>
+          <a href="login.php" class="btn btn-secondary m-2 text-black" style="width: 150px; background-color: white;">เข้าสู่ระบบ</a>
         </div>
       </div>
 
