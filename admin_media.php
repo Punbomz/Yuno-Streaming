@@ -20,7 +20,7 @@
     <?php require('admin_navbar.php') ?>
 
     <?php
-        $sql = "SELECT m.media_img, m.media_title, m.media_status, t.* FROM Media m LEFT JOIN Type t ON m.type_id=t.type_id WHERE 1";
+        $sql = "SELECT m.media_id, m.media_img, m.media_title, m.media_status, t.* FROM Media m LEFT JOIN Type t ON m.type_id=t.type_id WHERE 1";
 
         if(isset($_GET['srch']) and $_GET['srch']!='') {
             $sql.=" AND m.media_title LIKE '%".$_GET['srch']."%'";
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="row justify-content-center">
-                    <select name="t" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&st=<?php echo $_GET['st']; ?>&so=<?php echo $_GET['so']; ?>&t=' + this.value;">
+                    <select name="t" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&st=<?php echo $_GET['st']; ?>&so=<?php echo $_GET['so']; ?>&p=<?php echo $_GET['p']; ?>&ps=<?php echo $_GET['ps']; ?>&t=' + this.value;">
                         <option value=''>ประเภททั้งหมด</option>
                         <?php
                             $sql1 = "SELECT * FROM Type ORDER BY type_name";
@@ -74,7 +74,7 @@
                         <?php } ?>
                     </select>
 
-                    <select name="a" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&t=<?php echo $_GET['t']; ?>&st=<?php echo $_GET['st']; ?>&so=<?php echo $_GET['so']; ?>&a=' + this.value;">
+                    <select name="a" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&t=<?php echo $_GET['t']; ?>&st=<?php echo $_GET['st']; ?>&so=<?php echo $_GET['so']; ?>&p=<?php echo $_GET['p']; ?>&ps=<?php echo $_GET['ps']; ?>&a=' + this.value;">
                         <option value='' <?php if(''==$_GET['a']) echo 'selected'; ?>>ช่วงอายุทั้งหมด</option>
                         <option value='1' <?php if('1'==$_GET['a']) echo 'selected'; ?>>สำหรับเด็ก</option>
                         <option value='2' <?php if('2'==$_GET['a']) echo 'selected'; ?>>ทุกวัย</option>
@@ -82,13 +82,13 @@
                         <option value='4' <?php if('4'==$_GET['a']) echo 'selected'; ?>>18+</option>
                     </select>
 
-                    <select name="st" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&t=<?php echo $_GET['t']; ?>&so=<?php echo $_GET['so']; ?>&st=' + this.value;">
+                    <select name="st" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&t=<?php echo $_GET['t']; ?>&so=<?php echo $_GET['so']; ?>&p=<?php echo $_GET['p']; ?>&ps=<?php echo $_GET['ps']; ?>&st=' + this.value;">
                         <option value='' <?php if(''==$_GET['st']) echo 'selected'; ?>>สถานะทั้งหมด</option>
                         <option value='1' <?php if('1'==$_GET['st']) echo 'selected'; ?>>กำลังฉาย</option>
                         <option value='0' <?php if('0'==$_GET['st']) echo 'selected'; ?>>หยุดฉาย</option>
                     </select>
 
-                    <select name="so" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&st=<?php echo $_GET['st']; ?>&t=<?php echo $_GET['t']; ?>&so=' + this.value;">
+                    <select name="so" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&st=<?php echo $_GET['st']; ?>&t=<?php echo $_GET['t']; ?>&p=<?php echo $_GET['p']; ?>&ps=<?php echo $_GET['ps']; ?>&so=' + this.value;">
                         <option value='0' <?php if('0'==$_GET['so']) echo 'selected'; ?>>เรียงตามตัวอักษร</option>
                         <option value='1' <?php if('1'==$_GET['so']) echo 'selected'; ?>>เรียงตามข้อมูลล่าสุด</option>
                     </select>
@@ -103,6 +103,24 @@
         <?php if($num==0) { ?>
             <label class="mt-3">ไม่มีข้อมูล</label>
         <?php } else { ?>
+            <?php
+                if(isset($_GET['p']) and $_GET['p'] != "") {
+                    $page = $_GET['p'];
+                } else {
+                    $page = 1;
+                }
+
+                if(isset($_GET['ps']) and $_GET['ps'] != "") {
+                    $j = $_GET['ps'];
+                } else {
+                    $j = 1;
+                }
+
+                $amount = 15;
+                $start = ($page*$amount) - $amount + 1;
+                $end = $page*$amount;
+                $c = 1;
+            ?>
             <table class="table mt-4 table-dark table-hover table-borderless">
                 <thead>
                     <tr>
@@ -115,23 +133,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                        $i = 1;
-                        foreach($result as $row) { ?>
+                    <?php $i=1; foreach($result as $row) { ?>
+                        <?php if($c >= $start and $c <= $end) { ?>
                             <tr>
                             <td style="background-color: #412E2E;"><?php echo $i; ?></td>
-                            <td style="background-color: #412E2E;"><img class="img-thumbnail" src="img/media/posters/<?php echo $row['media_img']; ?>" style="width: 200px;"></td>
+                            <td style="background-color: #412E2E;"><img class="rounded-3" src="img/media/posters/<?php echo $row['media_img']; ?>" style="width: 144px; height: 193px;"></td>
                             <td style="background-color: #412E2E;"><?php echo $row['media_title']; ?></td>
                             <td style="background-color: #412E2E;"><?php echo $row['type_name']; ?></td>
                             <td style="background-color: #412E2E;"><?php if($row['media_status']==0) echo 'หยุดฉาย'; else echo 'กำลังฉาย'; ?></td>
                             <td style="background-color: #412E2E;">
-                                <a class="text-decoration-none m-3" href="edit_media.php?id=<?php $row['media_id']; ?>">
+                                <a class="text-decoration-none m-3" href="edit_media.php?id=<?php echo $row['media_id']; ?>">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
                                 </svg>
                                 </a>
-                                <a class="text-decoration-none m-3" href="delete_media.php?id=<?php $row['media_id']; ?>" onclick="return confirm('ยืนยันการลบ?');">
+                                <a class="text-decoration-none m-3" href="delete_media.php?id=<?php echo $row['media_id']; ?>" onclick="return confirm('ยืนยันการลบ?');">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black" class="bi bi-trash" viewBox="0 0 16 16">
                                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
                                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
@@ -139,51 +156,37 @@
                                 </a>
                             </td>
                             </tr>
+                        <?php } $c++; ?>
                     <?php $i++; } ?>
                 </tbody>
             </table>
         <?php } ?>
     </div>
 
+    <?php if($num != 0) { ?>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="">
+                <a style="background-color: #262121;" class="page-link text-white border-0" href="admin_media.php?srch=<?php echo $_GET['srch']?>&t=<?php echo $_GET['t']?>&a=<?php echo $_GET['a']?>&st=<?php echo $_GET['st']?>&so=<?php echo $_GET['so']?>&p=<?php if($j!=1) echo (($j-1)*10)-9; ?>&ps=<?php echo ($_GET['ps'] > 1) ? ($_GET['ps'] - 1) : 1; ?>" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                <?php 
+                    $pp = ceil($num / $amount);
+                    for($k = ($j * 10) - 10 + 1; ($k <= $j*10 and $k <= $pp); $k++) { ?>
+                        <li class=""><a style="background-color: <?php if($k==1 and (!isset($_GET['p']) or $_GET['p']=="")) echo '#DBC245'; else if($_GET['p']==$k) echo '#DBC245'; else echo '#262121'; ?>;" class="border-0 page-link text-<?php if($k==1 and (!isset($_GET['p']) or $_GET['p']=="")) echo 'black'; else if($_GET['p']==$k) echo 'black'; else echo 'white'; ?> rounded-3" href="admin_media.php?srch=<?php echo $_GET['srch']?>&t=<?php echo $_GET['t']?>&a=<?php echo $_GET['a']?>&st=<?php echo $_GET['st']?>&so=<?php echo $_GET['so']?>&p=<?php echo $k; ?>&ps=<?php echo ceil($k/10); ?>"><?php echo $k; ?></a></li>
+                <?php } ?>
+                        <li class="">
+                        <a style="background-color: #262121;" class="page-link text-white border-0" href="admin_media.php?srch=<?php echo $_GET['srch']?>&t=<?php echo $_GET['t']?>&a=<?php echo $_GET['a']?>&st=<?php echo $_GET['st']?>&so=<?php echo $_GET['so']?>&p=<?php if($j!=ceil($pp/10)) echo (($j+1)*10)-9; else echo $pp; ?>&ps=<?php if($j+1 <= ceil($pp/10)) echo $j+1; else echo $j; ?>" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                        </li>
+            </ul>
+        </nav>
+    <?php } ?>
+
     <script src="js/bootstrap.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
-        google.charts.load('current',{packages:['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            const data = google.visualization.arrayToDataTable([
-            ['Contry', 'Mhl'],
-            ['Italy', 55],
-            ['France', 49],
-            ['Spain', 44],
-            ['USA', 24],
-            ['Argentina', 15]
-            ]);
-
-            const options = {
-                backgroundColor: 'transparent',
-                legend: {
-                    textStyle: { color: 'white', fontSize: 14 },
-                    alignment: 'center', 
-                    position: 'right'
-                },
-                pieSliceTextStyle: {
-                    color: 'white'
-                },
-                chartArea: {
-                    left: 20,
-                    top: 20,
-                    width: '100%',
-                    height: '80%'
-                }
-            };
-
-            const chart = new google.visualization.PieChart(document.getElementById('myChart'));
-            chart.draw(data, options);
-        }
-    </script>
 
 </body>
 </html>

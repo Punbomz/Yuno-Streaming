@@ -28,7 +28,9 @@
                     <div class="col-12 col-md-6">
                         <div class="row justify-content-center">
                             <label class="form-label mt-2">โปสเตอร์</label>
-                            <img id="Preview" class="img-thumbnail mb-3" alt="poster" style="width: 640px; height: 360px; object-fit: cover;">
+                            <img id="Preview" class="mb-3" style="width: 288px; height: 386px; object-fit: cover; border-radius: 25px;" alt="Preview">
+                        </div>
+                        <div class="row justify-content-center">
                             <input id="Posterpic" type="file" name="poster" accept="image/*" class="form-control mb-3 w-50" onchange="handleFileChange(this);" required>
                         </div>
                     </div>
@@ -124,7 +126,7 @@
                         <div class="row mt-3 justify-content-center">
                             <div class="w-50">
                                 <label class="form-label">นักแสดง</label>
-                                <textarea rows="4" name="actor" class="form-control mt-2" placeholder="ระบุนักแสดง"></textarea>
+                                <textarea rows="4" name="actor" class="form-control mt-2" placeholder="ระบุนักแสดง" required></textarea>
                             </div>
                         </div>
                     </div>
@@ -247,7 +249,7 @@
                     <label class="form-label mb-0 dur-label">ระยะเวลา: </label>
                 </div>
                 <div class="col-md-2">
-                    <button type="button" class="btn btn-danger" style="width: 100px;" onclick="removeFile(this)">ลบ</button>
+                    <button type="button" class="btn btn-danger" style="width: 100px;" onclick="if (confirm('ยืนยันการยกเลิก?')) removeFile(this)">ลบ</button>
                 </div>
             `;
 
