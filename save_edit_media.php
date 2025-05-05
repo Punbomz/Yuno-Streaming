@@ -40,16 +40,18 @@
 
         $file_names = [];
         if (!empty($_FILES['file']['name']) && isset($_FILES['file']['name'])) {
-            foreach($row_file as $name) {
-                $file_media = 'files/' . $name;
-                if (file_exists($file_media)) {
-                    unlink($file_media);
-                }
-            }
-
             for ($i = 0; $i < count($_FILES['file']['name']); $i++) {
 
                 if ($_FILES['file']['error'][$i] === 0) {
+                    // ถ้ามีไฟล์เดิม และชื่อไม่ตรงกับไฟล์ใหม่ -> ลบ
+                    if (isset($row_file[$i]) && $row_file[$i] != $_FILES['file']['name'][$i]) {
+                        $file_media = 'files/' . $row_file[$i];
+                        if (file_exists($file_media)) {
+                            unlink($file_media);
+                        }
+                    }
+
+                    // อัปโหลดไฟล์ใหม่
                     $ext2 = pathinfo($_FILES['file']['name'][$i], PATHINFO_EXTENSION);
                     $file_name = $title . time() . '_ep' . ($i + 1) . '.' . $ext2;
 
@@ -60,12 +62,14 @@
                     }
 
                 } else {
+                    // ไม่มีไฟล์ใหม่ ใช้ชื่อเดิม
                     if (isset($row_file[$i])) {
                         $file_names[] = $row_file[$i];
                     }
                 }
             }
         } else {
+            // ไม่ได้อัปโหลดใหม่เลย ใช้ไฟล์เดิมทั้งหมด
             $file_names = $row_file;
         }
 
