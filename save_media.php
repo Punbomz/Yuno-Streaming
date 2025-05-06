@@ -26,6 +26,8 @@
                     $file_name = $title.time().'_ep'. ($i + 1) .'.'.$ext2;
                     if(move_uploaded_file($_FILES["file"]["tmp_name"][$i],'files/'.$file_name)) {
                         array_push($file_names, $file_name);
+                    } else {
+                        die("<script> alert('อัปโหลดไม่สำเร็จ'); history.back(); </script>");
                     }
                 }
                 else {

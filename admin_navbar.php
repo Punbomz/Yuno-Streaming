@@ -9,8 +9,10 @@
         <div class="nav flex-column mt-4 text-start" style="margin-left: 20px;">
             <a class="link mt-2" href="admin_index.php" style="<?php if($pageName=='admin_index.php') echo 'color: yellow;'; ?>">แดชบอร์ด</a>
             <a class="link mt-2" href="admin_media.php" style="<?php if($pageName=='admin_media.php' or $pageName=='add_media.php' or $pageName=='edit_media.php') echo 'color: yellow;'; ?>">มีเดีย</a>
-            <a class="link mt-2" href="admin_package.php" style="<?php if($pageName=='admin_package.php') echo 'color: yellow;'; ?>">แพ็คเกจ</a>
-            <a class="link mt-2" href="admin_user.php" style="<?php if($pageName=='admin_user.php') echo 'color: yellow;'; ?>">ผู้ใช้</a>
+            <?php if($_SESSION['user_lv'] == 1) { ?>
+                <a class="link mt-2" href="admin_package.php" style="<?php if($pageName=='admin_package.php' or $pageName=='add_package.php' or $pageName=='edit_package.php') echo 'color: yellow;'; ?>">แพ็คเกจ</a>
+                <a class="link mt-2" href="admin_user.php" style="<?php if($pageName=='admin_user.php' or $pageName=='register.php' or $pageName=='edit_user.php' or $pageName=='add_admin.php' or $pageName=='edit_admin.php') echo 'color: yellow;'; ?>">ผู้ใช้</a>
+            <?php } ?>
         </div>
     </div>
 

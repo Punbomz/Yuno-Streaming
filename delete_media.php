@@ -28,24 +28,24 @@
         $result2 = mysqli_query($dbcon, $sql2);
 
         if(!$result2) {
-            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); window.location="admin_media.php";</script>');
+            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); history.back();</script>');
         }
 
         $sql3 = "DELETE FROM Medias_Genre WHERE media_id='$id'";
         $result3 = mysqli_query($dbcon, $sql3);
 
         if(!$result3) {
-            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); window.location="admin_media.php";</script>');
+            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); history.back();</script>');
         }
 
         $sql4 = "DELETE FROM Media_Files WHERE media_id='$id'";
         $result4 = mysqli_query($dbcon, $sql4);
 
         if(!$result4) {
-            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); window.location="admin_media.php";</script>');
+            die('<script>alert("ลบมีเดียไม่สำเร็จ!"); history.back();</script>');
         }
 
-        echo "<script>alert('ลบมีเดียสำเร็จ!'); location.href='admin_media.php';</script>";
+        echo "<script>alert('ลบมีเดียสำเร็จ!'); history.back();</script>";
 } else {
     header("Location: index.php");
 } ?>

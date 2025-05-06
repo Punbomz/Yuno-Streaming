@@ -1,7 +1,7 @@
 <?php require('connect.php'); ?>
 
 <?php
-    if(!isset($_SESSION['logined'])) {
+    if(!isset($_SESSION['logined']) or (isset($_SESSION['logined']) and $_SESSION['user_lv']==1)) {
         extract($_POST);
 
         $sql = "SELECT * FROM User WHERE user_name='$username'";
@@ -32,12 +32,25 @@
         $result = mysqli_query($dbcon, $sql);
 
         if(!$result) {
-            die('<script>alert("สมัครสมาชิกไม่สำเร็จ โปรดลองอีกครั้ง!"); window.location="register.php";</script>');
+            if(isset($_SESSION['logined']) and $_SESSION['user_lv']==1) {
+                die('<script>alert("เพิ่มผู้ใช้ไม่สำเร็จ โปรดลองอีกครั้ง!"); history.back();</script>');
+            } else {
+                die('<script>alert("สมัครสมาชิกไม่สำเร็จ โปรดลองอีกครั้ง!"); history.back();</script>');
+            }
         }
 
-        echo "<script>alert('สมัครสมาชิกสำเร็จ!');
-        location.href='login.php';</script>";
+        if(isset($_SESSION['logined']) and $_SESSION['user_lv']==1) {
+            echo "<script>alert('เพิ่มผู้ใช้สำเร็จ!');
+            location.href='admin_user.php';</script>";
+        } else {
+            echo "<script>alert('สมัครสมาชิกสำเร็จ!');
+            location.href='login.php';</script>";
+        }
     } else {
-        header("Location: index.php");
+        if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) {
+            header("Location: admin_index.php");
+        } else {
+            header("Location: index.php");
+        }
     }
 ?>

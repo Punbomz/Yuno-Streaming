@@ -38,11 +38,13 @@
             $sql.=" AND m.media_status='".$_GET['st']."'";
         }
 
-        if(isset($_GET['s']) and $_GET['s']!='') {
-            if($_GET['s']==0) {
+        if(isset($_GET['so']) and $_GET['so']!='') {
+            if($_GET['so']==0) {
                 $sql.=" ORDER BY m.media_title ASC";
-            } else {
+            } else if($_GET['so']==1) {
                 $sql.=" ORDER BY m.media_id DESC";
+            } else if($_GET['so']==2) {
+                $sql.=" ORDER BY m.media_id ASC";
             }
         }
 
@@ -91,6 +93,7 @@
                     <select name="so" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_media.php?srch=<?php echo $_GET['srch']; ?>&a=<?php echo $_GET['a']; ?>&st=<?php echo $_GET['st']; ?>&t=<?php echo $_GET['t']; ?>&p=<?php echo $_GET['p']; ?>&ps=<?php echo $_GET['ps']; ?>&so=' + this.value;">
                         <option value='0' <?php if('0'==$_GET['so']) echo 'selected'; ?>>เรียงตามตัวอักษร</option>
                         <option value='1' <?php if('1'==$_GET['so']) echo 'selected'; ?>>เรียงตามข้อมูลล่าสุด</option>
+                        <option value='2' <?php if('2'==$_GET['so']) echo 'selected'; ?>>เรียงตามข้อมูลเก่าสุด</option>
                     </select>
                 </div>
             </form>

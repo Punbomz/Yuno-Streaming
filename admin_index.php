@@ -20,7 +20,7 @@
     <?php require('admin_navbar.php') ?>
 
     <div class="container justify-content-center text-center mt-5">
-        <h2>แดชบอร์ด</h2>
+        <h1>แดชบอร์ด</h1>
 
         <div class="row">
             <form action="admin_index.php" method="get">

@@ -20,7 +20,7 @@
     <?php require('admin_navbar.php') ?>
 
     <div class="container justify-content-center text-center mt-5">
-        <h2>เพิ่มมีเดีย</h2>
+        <h1>เพิ่มมีเดีย</h1>
 
         <form action="save_media.php" method="post" enctype="multipart/form-data">
             <div class="row justify-content-center rounded-3 p-4 mt-5 mb-5" style="background-color: #412E2E;">

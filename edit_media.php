@@ -20,7 +20,7 @@
     <?php require('admin_navbar.php') ?>
 
     <div class="container justify-content-center text-center mt-5">
-        <h2>แก้ไขมีเดีย</h2>
+        <h1>แก้ไขมีเดีย</h1>
 
         <?php
             $sql = "SELECT * FROM Media WHERE media_id = '".$_GET['id']."'";
