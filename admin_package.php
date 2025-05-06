@@ -146,9 +146,24 @@
                                 <td style="background-color: #412E2E;"><?php echo $i; ?></td>
                                 <td style="background-color: #412E2E;"><?php echo $d['user_name']; ?></td>
                                 <?php foreach($package_names as $pk) { ?>
-                                    <td style="background-color: #412E2E;"><?php echo $d[$pk]; ?></td>
+                                    <?php
+                                        $price = $d[$pk];
+                                        if($price >= 1000000) {
+                                            $price = round($price/1000000, 2).' M';
+                                        } else if($price >= 1000) {
+                                            $price = round($price/1000, 2).' K';
+                                        }
+                                        
+                                        $total = $d['total_price'];
+                                        if($total >= 1000000) {
+                                            $total = round($total/1000000, 2).' M';
+                                        } else if($total >= 1000) {
+                                            $total = round($total/1000, 2).' K';
+                                        }
+                                    ?>
+                                    <td style="background-color: #412E2E;"><?php echo $price; ?></td>
                                 <?php } ?>
-                                <td style="background-color: #412E2E;"><?php echo $d['total_price']; ?></td>
+                                <td style="background-color: #412E2E;"><?php echo $total; ?></td>
                                 </tr>
                             <?php } $c++; ?>
                         <?php $i++; } ?>

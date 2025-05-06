@@ -22,18 +22,75 @@
     <div class="container justify-content-center text-center mt-5">
         <h1>แดชบอร์ด</h1>
 
+        <?php
+            // รายได้
+            $month = intval($_GET['m']);
+            $year = intval($_GET['y']);
+            $sql_income = "SELECT SUM(price) AS Incomes FROM Payment_History WHERE MONTH(payment_datetime) = $month AND YEAR(payment_datetime) = $year";                      
+            $result_income = mysqli_query($dbcon, $sql_income);
+            $income = mysqli_fetch_assoc($result_income);
+
+            $income = $income['Incomes'];
+            if($income >= 1000000) {
+                $income = round($income/1000000, 2).' M';
+            } else if($income >= 1000) {
+                $income = round($income/1000, 2).' K';
+            }
+
+            // ยอดการรับชม
+            $sql_views = "SELECT COUNT(*) AS Views FROM History WHERE MONTH(watch_date) = $month AND YEAR(watch_date) = $year";
+            $result_views = mysqli_query($dbcon, $sql_views);
+            $views = mysqli_fetch_assoc($result_views);
+
+            $views = $views['Views'];
+            if($views >= 1000000) {
+                $views = round($views/1000000, 2).' M';
+            } else if($views >= 1000) {
+                $views = round($views/1000, 2).' K';
+            }
+
+            // ผู้ใช้ใหม่
+            $sql_user = "SELECT COUNT(*) AS NewUsers FROM User WHERE MONTH(register_date) = $month AND YEAR(register_date) = $year";
+            $result_user = mysqli_query($dbcon, $sql_user);
+            $user = mysqli_fetch_assoc($result_user);
+
+            $user = $user['NewUsers'];
+            if($user >= 1000000) {
+                $user = round($user/1000000, 2).' M';
+            } else if($user >= 1000) {
+                $user = round($user/1000, 2).' K';
+            }
+        ?>
+
+        <?php
+            $data = [["Package Name", "Total Price"]];
+            $sql_pk = "SELECT ph.package_name, SUM(ph.price) AS total_price
+                FROM Payment_History ph
+                JOIN Package pk ON ph.package_name = pk.package_name
+                GROUP BY ph.package_name
+                ORDER BY total_price ASC";
+
+            $result_pk = mysqli_query($dbcon, $sql_pk);
+
+            while ($row = mysqli_fetch_assoc($result_pk)) {
+                $data[] = [$row['package_name'], (float)$row['total_price']];
+            }
+
+            $jsonData = json_encode($data);
+        ?>
+
         <div class="row">
             <form action="admin_index.php" method="get">
                 <div class="row justify-content-center">
-                    <select name="m" class="form-select text-center m-4" style="width: 200px;">
+                    <select name="m" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_index.php?y=<?php echo $_GET['y']; ?>&m='+this.value;">
                         <?php
                         $month = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
                         for($i=1; $i<=12; $i++) { ?>
-                            <option value="<?php echo $i; ?>"><?php echo $month[$i-1]; ?></option>
+                            <option value="<?php echo $i; ?>" <?php if($_GET['m']==$i) echo 'selected'; ?>><?php echo $month[$i-1]; ?></option>
                         <?php } ?>
                     </select>
 
-                    <select name="y" class="form-select text-center m-4" style="width: 200px;">
+                    <select name="y" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_index.php?m=<?php echo $_GET['m']; ?>&y='+this.value;">
                         <?php
                         $sql2 = "SELECT MIN(year) AS min_year
                             FROM (
@@ -53,7 +110,7 @@
                         }
 
                         for($i=$myear; $i<=date("Y"); $i++) { ?>
-                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                            <option value="<?php echo $i; ?> <?php if($_GET['y']==$i) echo 'selected'; ?>"><?php echo $i; ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -68,7 +125,7 @@
 
                 <div class="mt-3 pt-3">
                     <label class="text-white">รายได้</label>
-                    <h3 class="mt-2 text-white">$2.5M</h3>
+                    <h3 class="mt-2 text-white">$<?php echo $income; ?></h3>
                 </div>
             </div>
 
@@ -79,7 +136,7 @@
 
                 <div class="mt-3 pt-3">
                     <label class="text-white">ยอดการรับชม</label>
-                    <h3 class="mt-2 text-white">2.78M</h3>
+                    <h3 class="mt-2 text-white"><?php echo $views; ?></h3>
                 </div>
             </div>
 
@@ -90,7 +147,7 @@
 
                 <div class="mt-3 pt-3">
                     <label class="text-white">ผู้ใช้ใหม่</label>
-                    <h3 class="mt-2 text-white">693K</h3>
+                    <h3 class="mt-2 text-white"><?php echo $user; ?></h3>
                 </div>
             </div>
         </div>
@@ -112,8 +169,8 @@
                 <div class="row">
                     <a href="admin_media.php" class="btn btn-warning mb-5 mt-5" style="width: 300px;"><b>จัดการมีเดีย</b></a>
                     <a href="admin_package.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแพ็คเกจ</b></a>
-                    <a href="manage_users.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการผู้ใช้</b></a>
-                    <a href="manage_admin.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแอดมิน</b></a>
+                    <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการผู้ใช้</b></a>
+                    <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแอดมิน</b></a>
                 </div>
             </div>
         </div>
@@ -122,19 +179,12 @@
     <script src="js/bootstrap.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
-        google.charts.load('current',{packages:['corechart']});
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
-            const data = google.visualization.arrayToDataTable([
-            ['Contry', 'Mhl'],
-            ['Italy', 55],
-            ['France', 49],
-            ['Spain', 44],
-            ['USA', 24],
-            ['Argentina', 15]
-            ]);
+            const data = google.visualization.arrayToDataTable(<?php echo $jsonData; ?>);
 
             const options = {
                 backgroundColor: 'transparent',
