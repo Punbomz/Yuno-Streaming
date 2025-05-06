@@ -25,6 +25,10 @@
             <?php
                 $pk_sql = "SELECT * FROM Package ORDER BY price ASC";
                 $pk_result = mysqli_query($dbcon, $pk_sql);
+                $packages = [];
+                foreach($pk_result as $pk) {
+                    array_push($packages, $pk['package_name']);
+                }
             ?>
 
             <div class="row justify-content-center mb-3">
@@ -63,43 +67,19 @@
             </div>
 
             <?php
-                $sql_pk = "SELECT ph.user_id, u.user_name,
-                        ph.package_name,
-                        SUM(ph.price) AS total_price
-                FROM Payment_History ph
-                JOIN Package pk ON ph.package_name = pk.package_name
-                JOIN User u ON ph.user_id = u.user_id
-                GROUP BY ph.user_id, ph.package_name
-                ORDER BY total_price ASC";
-
-                $result_pk = mysqli_query($dbcon, $sql_pk);
-                $num_pk = mysqli_num_rows($result_pk);
-
-                $data = [];
-                $package_names = [];
+                $sql_income = "SELECT ph.user_id, u.user_name,";
                 
-                while ($row = mysqli_fetch_assoc($result_pk)) {
-                    $user_id = $row['user_id'];
-                    $user_name = $row['user_name'];
-                    $package_name = $row['package_name'];
-                    $price = (float)$row['total_price'];
-                
-                    if (!in_array($package_name, $package_names)) {
-                        $package_names[] = $package_name;
-                    }
-                
-                    if (!isset($data[$user_id])) {
-                        $data[$user_id] = [
-                            'user_name' => $user_name,
-                            'total_price' => 0
-                        ];
-                    }
-                
-                    $data[$user_id][$package_name] = $price;
-                    $data[$user_id]['total_price'] += $price;
+                foreach($packages as $package) {
+                    $sql_income .= "SUM(CASE WHEN pk.package_name = '".$package."' THEN pk.price ELSE 0 END) AS '".$package."',";
                 }
                 
-                $data = array_values($data);
+                $sql_income .= "SUM(pk.price) AS total_revenue
+                    FROM Payment_History ph
+                    JOIN Package pk ON ph.package_name = pk.package_name
+                    JOIN User u ON u.user_id = ph.user_id
+                    GROUP BY ph.user_id";
+                $result_income = mysqli_query($dbcon, $sql_income);
+                $num_pk = mysqli_num_rows($result_income);
             ?>
 
             <div class="row justify-content-center mt-5">
@@ -133,28 +113,28 @@
                         <tr>
                         <th style="background-color: #534A4A;" width="5%" scope="col">ลำดับ</th>
                         <th style="background-color: #534A4A;" width="20%" scope="col">ชื่อผู้ใช้</th>
-                        <?php foreach($package_names as $pk) { ?>
+                        <?php foreach($packages as $pk) { ?>
                             <th style="background-color: #534A4A;" width="20%" scope="col"><?php echo $pk; ?></th>
                         <?php } ?>
                         <th style="background-color: #534A4A;" width="10%" scope="col">รวม</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=1; foreach($data as $d) { ?>
+                        <?php $i=1; foreach($result_income as $data) { ?>
                             <?php if($c >= $start and $c <= $end) { ?>
                                 <tr>
                                 <td style="background-color: #412E2E;"><?php echo $i; ?></td>
-                                <td style="background-color: #412E2E;"><?php echo $d['user_name']; ?></td>
-                                <?php foreach($package_names as $pk) { ?>
+                                <td style="background-color: #412E2E;"><?php echo $data['user_name']; ?></td>
+                                <?php foreach($packages as $pk) { ?>
                                     <?php
-                                        $price = $d[$pk];
+                                        $price = $data[$pk];
                                         if($price >= 1000000) {
                                             $price = round($price/1000000, 2).' M';
                                         } else if($price >= 1000) {
                                             $price = round($price/1000, 2).' K';
                                         }
                                         
-                                        $total = $d['total_price'];
+                                        $total = $data['total_revenue'];
                                         if($total >= 1000000) {
                                             $total = round($total/1000000, 2).' M';
                                         } else if($total >= 1000) {

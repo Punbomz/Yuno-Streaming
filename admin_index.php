@@ -31,7 +31,9 @@
             $income = mysqli_fetch_assoc($result_income);
 
             $income = $income['Incomes'];
-            if($income >= 1000000) {
+            if(is_null($income)) {
+                $income = 0;
+            } else if($income >= 1000000) {
                 $income = round($income/1000000, 2).' M';
             } else if($income >= 1000) {
                 $income = round($income/1000, 2).' K';
@@ -63,17 +65,25 @@
         ?>
 
         <?php
+            $pk_sql = "SELECT * FROM Package ORDER BY price ASC";
+            $pk_result = mysqli_query($dbcon, $pk_sql);
+            $packages = [];
+            foreach($pk_result as $pk) {
+                array_push($packages, $pk['package_name']);
+            }
+
             $data = [["Package Name", "Total Price"]];
-            $sql_pk = "SELECT ph.package_name, SUM(ph.price) AS total_price
+            $sql_pk = "SELECT pk.package_name, SUM(pk.price) AS total_revenue
                 FROM Payment_History ph
                 JOIN Package pk ON ph.package_name = pk.package_name
-                GROUP BY ph.package_name
-                ORDER BY total_price ASC";
+                WHERE MONTH(ph.payment_datetime) = $month AND YEAR(ph.payment_datetime) = $year
+                GROUP BY pk.package_name
+                ORDER BY total_revenue ASC";
 
             $result_pk = mysqli_query($dbcon, $sql_pk);
 
             while ($row = mysqli_fetch_assoc($result_pk)) {
-                $data[] = [$row['package_name'], (float)$row['total_price']];
+                $data[] = [$row['package_name'], (float)$row['total_revenue']];
             }
 
             $jsonData = json_encode($data);
