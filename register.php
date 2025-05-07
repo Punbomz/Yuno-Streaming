@@ -39,21 +39,33 @@
         <form action="register_save.php" method="post">
           <div class="row p-3 rounded-3 justify-content-center" style="background-color: #412E2E; width: 550px;">
             <div class="row justify-content-center mt-4">
-              <input name="email" type="email" class="form-control mb-3" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุอีเมล" required>
+              <div class="row mb-2" style="margin-left: 3px;">
+                  <label>อีเมล</label>
+              </div>
+              <input name="email" type="email" class="form-control mb-2" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุอีเมล" required>
             </div>
 
             <div class="row justify-content-center mt-3">
-              <input name="username" type="text" class="form-control mb-3" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุชื่อผู้ใช้" required>
+              <div class="row mb-2" style="margin-left: 3px;">
+                  <label>ชื่อผู้ใช้</label>
+              </div>
+              <input name="username" type="text" class="form-control mb-2" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุชื่อผู้ใช้" required>
             </div>
 
             <div class="row justify-content-center mt-3">
-              <input name="dob" type="date" class="form-control mb-3" style="width: 428px; background-color: #A8A0A0;" max="<?php echo date('Y-m-d'); ?>" required>
+              <div class="row mb-2" style="margin-left: 3px;">
+                  <label>วันเกิด</label>
+              </div>
+              <input name="dob" type="date" class="form-control mb-2" style="width: 428px; background-color: #A8A0A0;" max="<?php echo date('Y-m-d'); ?>" required>
             </div>
 
-            <div class="row justify-content-center mt-3 mb-3">
+            <div class="row justify-content-center mt-3 mb-2">
+              <div class="row mb-2" style="margin-left: 3px;">
+                  <label>รหัสผ่าน</label>
+              </div>
               <div class="input-group" style="width: 450px;">
-                <input name="password" id="password" class="form-control mb-3" style="background-color: #A8A0A0;" type="password" placeholder="ระบุรหัสผ่าน" required>
-                <i class="bi bi-eye-slash input-group-text mb-3" id="togglePassword"></i>
+                <input name="password" id="password" class="form-control mb-2" style="background-color: #A8A0A0;" type="password" placeholder="ระบุรหัสผ่าน" required>
+                <i class="bi bi-eye-slash input-group-text mb-2" id="togglePassword"></i>
               </div>
             </div>
           </div>

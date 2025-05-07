@@ -1,164 +1,83 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit Profile</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #1d1919;
-      color: white;
-    }
+<?php require('connect.php'); ?>
 
-    .header {
-      background-color: black;
-      padding: 15px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<?php if(isset($_SESSION['logined']) and $_SESSION['user_lv']==0) { ?>
 
-    /* ปรับขนาดลูกศรให้ใหญ่ขึ้น */
-    .back-arrow {
-      font-size: 36px;  /* เพิ่มขนาดลูกศร */
-      position: absolute;
-      left: 20px;
-      cursor: pointer;
-      color: white;
-    }
+  <!DOCTYPE html>
+  <html lang="th">
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title><?php echo web_title ?></title>
+      <link rel="icon" type="image/x-icon" href="<?php echo favicon; ?>">
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/mycss.css" rel="stylesheet">
+  </head>
+  <body class="dark-bg">
+      <?php require('navbar.php'); ?>
 
-    .header h1 {
-      font-size: 28px;
-      margin: 0;
-    }
+      <?php
+        $sql = "SELECT * FROM User WHERE user_id='".$_SESSION['user_id']."'";
+        $result = mysqli_query($dbcon, $sql);
+        $row = mysqli_fetch_assoc($result);
+      ?>
 
-    .container {
-      display: flex;
-      padding: 40px;
-      gap: 40px;
-      min-height: 80vh;
-    }
+    <div class="container justify-content-center text-center mt-5">
+      <h1>โปรไฟล์</h1>
 
-    .left {
-      flex: 1;
-      text-align: center;
-    }
+      <div class="container justify-content-center mt-5">
+        <div class="row">
+          <div class="col">
+            <div class="row justify-content-center mb-2">
+              <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-3 img-thumbnail" alt="Profile" style="width: 250px; height: 250px; object-fit: cover;">
+            </div>
+            <div class="row justify-content-center mb-2">
+              <h3 class="text-center"><?php echo $row['user_name']; ?></h3>
+            </div>
+            <div class="row text-center">
+              <p>Start Date : <?php echo $row['register_date']; ?></p>
+              <p>End Date : <?php if(is_null($row['package_start'])) echo '-'; else {
+                $date = new DateTime($row['package_start']);
+                $date->modify('+1 month');
+                echo $date->format('Y-m-d'); } ?></p>
+            </div>
+          </div>
+  
+          <div class="col">
+            <form action="#" enctype="multipart/form-data">
+              <div class="row justify-content-center mt-3 mb-2">
+                <div class="row mb-2" style="margin-left: 3px;">
+                    <label>อีเมล</label>
+                </div>
+                <input name="email" type="email" class="form-control mb-3" placeholder="ระบุอีเมล" value="<?php echo $row['user_email']; ?>" readonly>
+              </div>
 
-    .left img {
-      width: 200px;
-      height: auto;
-      border-radius: 8px;
-    }
+              <div class="row justify-content-center mt-3 mb-2">
+                <div class="row mb-2" style="margin-left: 3px;">
+                    <label>วันเกิด</label>
+                </div>
+                <input name="dob" type="date" class="form-control mb-3" value="<?php echo $row['user_birthdate']; ?>" readonly>
+              </div>
 
-    .left p {
-      margin: 10px 0;
-    }
-
-    .right {
-      flex: 2;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .form-section {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-
-    /* ปรับขนาดกล่องข้อความให้ใหญ่ขึ้น */
-    .input-box {
-      background-color: #d9d9d9;
-      border: none;
-      padding: 18px;  /* เพิ่มความสูงให้กล่องข้อความ */
-      font-size: 18px;  /* เพิ่มขนาดฟอนต์ */
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 5px;
-    }
-
-    /* ปรับให้ช่อง Package มีลูกศร */
-    .input-box.package {
-      background-color: #d9d9d9;
-      border: none;
-      padding: 18px;
-      font-size: 18px;
-      width: 100%;
-      box-sizing: border-box;
-      border-radius: 5px;
-      position: relative;
-    }
-
-    .input-box.package::after {
-      content: '▼';
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;  /* ปรับขนาดลูกศรในช่อง Package */
-      color: #333;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 80px;
-      margin-top: 40px;
-    }
-
-    .btn-cancel {
-      padding: 10px 30px;
-      font-size: 16px;
-      background-color: #d9d9d9;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .btn-save {
-      padding: 10px 30px;
-      font-size: 16px;
-      background-color: #f1cc53;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      color: black;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="header">
-    <div class="back-arrow">&#8592;</div>
-    <h1>Edit Profile</h1>
-  </div>
-
-  <div class="container">
-    <div class="left">
-      <!-- เพิ่มรูปภาพสัตว์ (น้องหมา) -->
-      <img src="https://place.dog/200/250" alt="Profile Photo">
-      <p>บอมบ์ลูกน้องพี่วี</p>
-      <p>Start Date : 9 April 2025</p>
-      <p>End Date : 32 May 2099</p>
-    </div>
-
-    <div class="right">
-      <div class="form-section">
-        <input type="email" class="input-box" placeholder="Email">
-        <input type="password" class="input-box" placeholder="Password">
-        <input type="text" class="input-box" placeholder="Mobile Number">
-        <!-- ช่องแพ็คเกจที่มีลูกศร -->
-        <input type="text" class="input-box package" placeholder="Package" readonly>
-      </div>
-
-      <div class="buttons">
-        <button class="btn-cancel">Cancel</button>
-        <button class="btn-save">Save</button>
+              <a href="package.php" class="form-control text-decoration-none mb-3">แพ็คเกจและการชำระเงิน</a>
+            </form>
+    
+            <div class="buttons">
+              <a href="profile_edit.php" class="btn btn-warning" style="width: 150px; margin-right: 25px;">แก้ไขโปรไฟล์</a>
+            </div>
+          </div>
+        </div>
+        </div>
       </div>
     </div>
-  </div>
 
-</body>
-</html>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <?php require('footer.php'); ?>
+
+  </body>
+  </html>
+<?php } else {
+  header("Location: index.php");
+} ?>

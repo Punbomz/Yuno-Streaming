@@ -56,13 +56,26 @@
               เข้าสู่ระบบ
           </a>
       <?php } else { ?>
-          <div class="" style="margin-right: 10px;">
-              <img src="#" class="img-thumbnail" style="width: 40px; height: 40px;">
+        <?php
+          $sql = "SELECT user_img FROM User WHERE user_id='".$_SESSION['user_id']."'";
+          $result = mysqli_query($dbcon, $sql);
+          $row = mysqli_fetch_assoc($result);
+        ?>
+          <div style="margin-right: 10px;">
+            <?php if($row['user_img']!='-') { ?>
+              <img src="img/profile/<?php echo $row['user_img']; ?>" class="img-thumbnail" style="width: 40px; height: 40px;">
+            <?php } else { ?>
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+              </svg>
+            <?php } ?>
           </div>
           <div class="dropdown" style="margin-right: 10px;">
               <a class="dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end mt-4">
-                  <li><a class="dropdown-item" href="#">โปรไฟล์</a></li>
+                  <li><a class="dropdown-item" href="profile.php">โปรไฟล์</a></li>
+                  <li><a class="dropdown-item" href="watchlist.php">รายการที่อยากดู</a></li>
                   <li><a class="dropdown-item" href="logout.php" onclick="return confirm('ยืนยันการออกจากระบบ?');">ออกจากระบบ</a></li>
               </ul>
           </div>

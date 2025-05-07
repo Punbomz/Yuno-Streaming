@@ -41,23 +41,35 @@
         <form action="admin_edit_save.php?id=<?php echo $_GET['id']; ?>" method="post">
             <div class="row p-3 rounded-3 justify-content-center" style="background-color: #412E2E; width: 550px;">
                 <div class="row justify-content-center mt-4">
-                <input name="email" type="email" class="form-control mb-3" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุอีเมล" required value="<?php echo $row['user_email']; ?>">
+                    <div class="row mb-2" style="margin-left: 3px;">
+                    <label>อีเมล</label>
+                    </div>
+                <input name="email" type="email" class="form-control mb-2" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุอีเมล" required value="<?php echo $row['user_email']; ?>">
                 </div>
 
                 <div class="row justify-content-center mt-3">
-                <input name="username" type="text" class="form-control mb-3" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุชื่อผู้ใช้" required value="<?php echo $row['user_name']; ?>">
+                    <div class="row mb-2" style="margin-left: 3px;">
+                    <label>ชื่อผู้ใช้</label>
+                    </div>
+                <input name="username" type="text" class="form-control mb-2" style="width: 428px; background-color: #A8A0A0;" placeholder="ระบุชื่อผู้ใช้" required value="<?php echo $row['user_name']; ?>">
                 </div>
 
                 <div class="row justify-content-center mt-3">
+                    <div class="row mb-2" style="margin-left: 3px;">
+                    <label>รหัสผ่าน</label>
+                    </div>
                 <div class="input-group" style="width: 450px;">
-                    <input name="password" id="password" class="form-control mb-3" style="background-color: #A8A0A0;" type="password" placeholder="ระบุรหัสผ่าน (กรณีเปลี่ยนรหัสผ่าน)">
-                    <i class="bi bi-eye-slash input-group-text mb-3" id="togglePassword"></i>
+                    <input name="password" id="password" class="form-control mb-2" style="background-color: #A8A0A0;" type="password" placeholder="ระบุรหัสผ่าน (กรณีเปลี่ยนรหัสผ่าน)">
+                    <i class="bi bi-eye-slash input-group-text mb-2" id="togglePassword"></i>
                 </div>
                 </div>
 
-                <div class="row justify-content-center mt-3 mb-3">
+                <div class="row justify-content-center mt-3 mb-2">
+                    <div class="row mb-2" style="margin-left: 3px;">
+                    <label>ระดับ</label>
+                    </div>
                 <div class="input-group" style="width: 450px;">
-                    <select name="lv" class="form-select mb-3 text-center" style="background-color: #A8A0A0;" required>
+                    <select name="lv" class="form-select mb-2 text-center" style="background-color: #A8A0A0;" required>
                         <option value="1" <?php if($row['user_lv']==1) echo 'selected'; ?>>แอดมินระบบ</option>
                         <option value="2" <?php if($row['user_lv']==2) echo 'selected'; ?>>แอดมินมีเดีย</option>
                     </select>

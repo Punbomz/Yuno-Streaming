@@ -32,7 +32,7 @@
         if($row['user_lv'] == 0) {
             echo "<script>location.href='index.php';</script>";
         } else {
-            echo "<script>location.href='admin_index.php';</script>";
+            echo "<script>location.href='admin_index.php?m=".(int)date("m")."&y=".date("Y")."';</script>";
         }
         
     } else {
