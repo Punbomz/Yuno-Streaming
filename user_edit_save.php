@@ -1,9 +1,13 @@
 <?php require('connect.php'); ?>
 
 <?php
-    if(!isset($_SESSION['logined']) or (isset($_SESSION['logined']) and $_SESSION['user_lv']==1)) {
+    if(!isset($_SESSION['logined']) or (isset($_SESSION['logined']) and $_SESSION['user_lv']==1) or (isset($_SESSION['logined']) and $_SESSION['user_lv']==0)) {
         extract($_POST);
         extract($_GET);
+
+        if($_SESSION['user_lv']==0) {
+            $id = $_SESSION['user_id'];
+        }
 
         $sql = "SELECT * FROM User WHERE user_name='$username' AND user_id != '$id'";
         $result = mysqli_query($dbcon, $sql);
@@ -18,7 +22,8 @@
         $num = mysqli_num_rows($result);
 
         if($num!=0) {
-            die("<script> alert('อีเมลนี้มีการสมัครสมาชิกแล้ว!'); history.back(); </script>");
+            echo $id;
+            die("<script> alert('อีเมลนี้มีการสมัครสมาชิกแล้ว!'); history.back();</script>");
         }
 
         $sql_pic = "SELECT user_img FROM User WHERE user_id='$id'";
@@ -44,9 +49,17 @@
 
             $da = date("Y-m-d");
 
-            $sql = "UPDATE User SET user_name = '$username', user_password = '$passwordHash', user_email = '$email', user_lv = '$lv', user_img='$pic' WHERE user_id='$id'";
+            if($_SESSION['user_lv']==1) {
+                $sql = "UPDATE User SET user_name = '$username', user_password = '$passwordHash', user_email = '$email', user_img='$pic' WHERE user_id='$id'";
+            } else {
+                $sql = "UPDATE User SET user_name = '$username', user_password = '$passwordHash', user_email = '$email', user_img='$pic' WHERE user_id='$id'";
+            }
         } else {
-            $sql = "UPDATE User SET user_name = '$username', user_email = '$email', user_img='$pic' WHERE user_id='$id'";
+            if($_SESSION['user_lv']==1) {
+                $sql = "UPDATE User SET user_name = '$username', user_email = '$email', user_img='$pic' WHERE user_id='$id'";
+            } else {
+                $sql = "UPDATE User SET user_name = '$username', user_email = '$email', user_img='$pic' WHERE user_id='$id'";
+            }
         }
         $result = mysqli_query($dbcon, $sql);
 
@@ -62,7 +75,7 @@
             location.href='profile.php';</script>";
         }
     } else {
-        if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) {
+        if(isset($_SESSION['logined']) and $_SESSION['user_lv']==2) {
             header("Location: admin_index.php");
         } else {
             header("Location: index.php");

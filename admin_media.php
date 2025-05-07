@@ -20,7 +20,7 @@
     <?php require('admin_navbar.php') ?>
 
     <?php
-        $sql = "SELECT m.media_id, m.media_img, m.media_title, m.media_status, t.* FROM Media m LEFT JOIN Type t ON m.type_id=t.type_id WHERE 1";
+        $sql = "SELECT m.media_id, m.media_img, m.media_title, m.media_status, t.*, IFNULL(v.Views, 0) AS Views FROM Media m LEFT JOIN Type t ON m.type_id=t.type_id LEFT JOIN (SELECT h.media_id, COUNT(*) AS Views FROM History h GROUP BY h.media_id) v ON m.media_id = v.media_id WHERE 1";
 
         if(isset($_GET['srch']) and $_GET['srch']!='') {
             $sql.=" AND m.media_title LIKE '%".$_GET['srch']."%'";
@@ -45,6 +45,10 @@
                 $sql.=" ORDER BY m.media_id DESC";
             } else if($_GET['so']==2) {
                 $sql.=" ORDER BY m.media_id ASC";
+            } else if($_GET['so']==3) {
+                $sql.=" ORDER BY v.Views ASC";
+            } else if($_GET['so']==3) {
+                $sql.=" ORDER BY v.Views DESC";
             }
         }
 
@@ -94,6 +98,8 @@
                         <option value='0' <?php if('0'==$_GET['so']) echo 'selected'; ?>>เรียงตามตัวอักษร</option>
                         <option value='1' <?php if('1'==$_GET['so']) echo 'selected'; ?>>เรียงตามข้อมูลล่าสุด</option>
                         <option value='2' <?php if('2'==$_GET['so']) echo 'selected'; ?>>เรียงตามข้อมูลเก่าสุด</option>
+                        <option value='3' <?php if('3'==$_GET['so']) echo 'selected'; ?>>เรียงตามยอดรับชมน้อยที่สุด</option>
+                        <option value='4' <?php if('4'==$_GET['so']) echo 'selected'; ?>>เรียงตามยอดรับชมมากที่สุด</option>
                     </select>
                 </div>
             </form>
@@ -131,6 +137,7 @@
                     <th style="background-color: #534A4A;" width="20%" scope="col">โปสเตอร์</th>
                     <th style="background-color: #534A4A;" width="20%" scope="col">ชื่อ</th>
                     <th style="background-color: #534A4A;" width="10%" scope="col">ประเภท</th>
+                    <th style="background-color: #534A4A;" width="10%" scope="col">ยอดรับชม</th>
                     <th style="background-color: #534A4A;" width="10%" scope="col">สถานะ</th>
                     <th style="background-color: #534A4A;" width="10%" scope="col"></th>
                     </tr>
@@ -143,6 +150,7 @@
                             <td style="background-color: #412E2E;"><img class="rounded-3" src="img/media/posters/<?php echo $row['media_img']; ?>" style="width: 144px; height: 193px;"></td>
                             <td style="background-color: #412E2E;"><?php echo $row['media_title']; ?></td>
                             <td style="background-color: #412E2E;"><?php echo $row['type_name']; ?></td>
+                            <td style="background-color: #412E2E;"><?php echo $row['Views']; ?></td>
                             <td style="background-color: #412E2E;"><?php if($row['media_status']==0) echo 'หยุดฉาย'; else echo 'กำลังฉาย'; ?></td>
                             <td style="background-color: #412E2E;">
                                 <a class="text-decoration-none m-3" href="edit_media.php?id=<?php echo $row['media_id']; ?>">

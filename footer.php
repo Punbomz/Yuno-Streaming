@@ -1,5 +1,5 @@
-<br><br><br>
-<footer class="text-center fixed-bottom">
+<br><br>
+<footer class="text-center">
   <div class="container">
     <div class="row">
       <div class="col-12">

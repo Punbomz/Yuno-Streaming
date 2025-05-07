@@ -5,30 +5,16 @@
   <!DOCTYPE html>
   <html lang="th">
   <head>
-    <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title><?php echo web_title ?></title>
-        <link rel="icon" type="image/x-icon" href="<?php echo favicon; ?>">
-        <!-- Bootstrap -->
-        <link href="css/bootstrap.css" rel="stylesheet">
-      <link href="css/mycss.css" rel="stylesheet">
+      <meta charset="utf-8">
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title><?php echo web_title ?></title>
+    <link rel="icon" type="image/x-icon" href="<?php echo favicon; ?>">
+      <!-- Bootstrap -->
+      <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/mycss.css" rel="stylesheet">
     <style>
-      body {
-        margin: 0;
-        font-family: sans-serif;
-        background-color: #221d1d;
-        color: white;
-      }
-
-      .header {
-        background-color: black;
-        color: white;
-        padding: 20px;
-        position: relative;
-        text-align: center;
-      }
-
       .back-arrow {
         font-size: 30px;
         position: absolute;
@@ -36,16 +22,6 @@
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-      }
-
-      .title {
-        font-size: 32px;
-        font-weight: 500;
-      }
-
-      .container {
-        padding: 20px;
-        padding-top: 40px;
       }
 
       .section {
@@ -93,7 +69,7 @@
       }
     </style>
   </head>
-  <body>
+  <body class="dark-bg">
 
     <?php require('navbar.php'); ?>
 
@@ -106,33 +82,61 @@
         $row = mysqli_fetch_assoc($result);
       ?>
 
-      <div class="container">
-        <div class="section section-main">
+      <div class="container mt-5">
+        <a href="package_detail.php" class="section section-main text-decoration-none">
           <span>รายละเอียด Package ของฉัน</span>
-          <div class="premium-badge"><?php if(is_null($row['package_name'])) echo 'คุณยังไม่ได้สมัครแพ็คเกจ'; else echo $row['package_name']; ?></div>
-        </div>
+          <?php if(!is_null($row['package_name'])) { ?>
+            <div class="premium-badge"><?php echo $row['package_name']; ?></div>
+          <?php } else { ?>
+            <div class="premium-badge">คุณยังไม่ได้สมัครแพ็คเกจ</div>
+          <?php } ?>
+        </a>
 
         <div class="section section-narrow">
           <span>จัดการอุปกรณ์และการเข้าถึง</span>
           <span class="arrow">&#62;</span>
         </div>
 
-        <div class="section section-narrow disabled">
-          <span>การชำระเงิน</span>
+        <?php
+            $sql_pay = "SELECT * FROM Payment WHERE user_id='".$_SESSION['user_id']."' AND payment_id = (SELECT payment_id FROM Payment_History WHERE user_id='".$_SESSION['user_id']."' ORDER BY payment_datetime DESC LIMIT 1)";
+            $result_pay = mysqli_query($dbcon, $sql_pay);
+            $row_pay = mysqli_fetch_assoc($result_pay);
+
+            $card = ['บัตรเครดิต', 'บัตรเดบิต'];
+        ?>
+
+        <div class="section section-narrow <?php if(is_null($row_pay['payment_id'])) echo 'disabled'; ?>">
+          <span>การชำระเงินหลัก</span>
+          <?php if(!is_null($row_pay['payment_id'])) { ?>
+            <?php
+              $cnum = $row_pay['number'];
+              for($i=0; $i<strlen($cnum); $i++) {
+                  if($i<=strlen($cnum)-5) {
+                      $cnum[$i] = '*';
+                  } else {
+                      $cnum[$i] = $cnum[$i];
+                  }
+              }
+            ?>
+            <span><?php echo $card[$row_pay['payment_type']-1]." ".$cnum; ?></span>
+          <?php } ?>
         </div>
 
-        <a class="section section-narrow" style="text-decoration: none;" href="payment.php.php">
-          <span>เลือกวิธีชำระเงิน</span>
+        <a class="section section-narrow" style="text-decoration: none;" href="payment.php">
+          <span>จัดการวิธีการชำระเงิน</span>
           <span class="arrow">&#62;</span>
         </a>
 
-        <a class="section section-narrow" style="text-decoration: none;" href="phistory.php">
+        <a class="section section-narrow" style="text-decoration: none;" href="payment_history.php">
           <span>ประวัติการชำระเงิน</span>
           <span class="arrow">&#62;</span>
         </a>
       </div>
     </div>
 
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <?php require('footer.php'); ?>
   </body>
   </html>
 <?php } else {

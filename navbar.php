@@ -33,11 +33,17 @@
             <a class="nav-link text-white" aria-current="page" href="index.php">หน้าหลัก</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" aria-current="page" href="index.php">ภาพยนตร์</a>
+            <a class="nav-link text-white" aria-current="page" href="discover.php">ค้นพบ</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" aria-current="page" href="index.php">ซีรีส์</a>
-          </li>
+          <?php
+            $sql2 = "SELECT * FROM Type ORDER BY type_name LIMIT 5";
+            $result2 = mysqli_query($dbcon, $sql2);
+          ?>
+          <?php foreach($result2 as $row2) { ?>
+            <li class="nav-item">
+              <a class="nav-link text-white" aria-current="page" href="discover.php?t=<?php echo $row2['type_id']; ?>"><?php echo $row2['type_name']; ?></a>
+            </li>
+          <?php } ?>
       </ul>
           
       <form class="d-flex" role="search" style="margin-right: 10px;">
@@ -72,7 +78,7 @@
             <?php } ?>
           </div>
           <div class="dropdown" style="margin-right: 10px;">
-              <a class="dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+              <a class="dropdown-toggle text-white" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end mt-4">
                   <li><a class="dropdown-item" href="profile.php">โปรไฟล์</a></li>
                   <li><a class="dropdown-item" href="watchlist.php">รายการที่อยากดู</a></li>

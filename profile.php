@@ -30,42 +30,51 @@
         <div class="row">
           <div class="col">
             <div class="row justify-content-center mb-2">
-              <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-3 img-thumbnail" alt="Profile" style="width: 250px; height: 250px; object-fit: cover;">
+              <?php if($row['user_img']!='-') { ?>
+                <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-3 img-thumbnail" alt="Profile" style="width: 250px; height: 250px; object-fit: cover;">
+              <?php } else { ?>
+                <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                </svg>
+              <?php } ?>
             </div>
-            <div class="row justify-content-center mb-2">
+            <div class="row justify-content-center mb-2 mt-4">
               <h3 class="text-center"><?php echo $row['user_name']; ?></h3>
             </div>
             <div class="row text-center">
-              <p>Start Date : <?php echo $row['register_date']; ?></p>
-              <p>End Date : <?php if(is_null($row['package_start'])) echo '-'; else {
-                $date = new DateTime($row['package_start']);
-                $date->modify('+1 month');
-                echo $date->format('Y-m-d'); } ?></p>
+              <p>เริ่มเป็นสมาชิก: <?php echo (new DateTime($row['register_date']))->format('d/m/Y'); ?></p>
             </div>
           </div>
   
           <div class="col">
             <form action="#" enctype="multipart/form-data">
               <div class="row justify-content-center mt-3 mb-2">
-                <div class="row mb-2" style="margin-left: 3px;">
+                <div class="row mb-2">
                     <label>อีเมล</label>
                 </div>
-                <input name="email" type="email" class="form-control mb-3" placeholder="ระบุอีเมล" value="<?php echo $row['user_email']; ?>" readonly>
+                <input name="email" type="email" class="form-control mb-3 text-center" placeholder="ระบุอีเมล" value="<?php echo $row['user_email']; ?>" readonly>
               </div>
 
               <div class="row justify-content-center mt-3 mb-2">
-                <div class="row mb-2" style="margin-left: 3px;">
+                <div class="row mb-2">
                     <label>วันเกิด</label>
                 </div>
-                <input name="dob" type="date" class="form-control mb-3" value="<?php echo $row['user_birthdate']; ?>" readonly>
+                <input name="dob" type="date" class="form-control mb-3 text-center" value="<?php echo $row['user_birthdate']; ?>" readonly>
               </div>
 
-              <a href="package.php" class="form-control text-decoration-none mb-3">แพ็คเกจและการชำระเงิน</a>
+              <div class="buttons">
+                <a href="profile_edit.php" class="btn btn-warning" style="width: 150px; margin-right: 25px;">แก้ไขโปรไฟล์</a>
+              </div>
+
+              <div class="row justify-content-center mt-5 mb-4">
+                <div class="btn text-white shadow" style="background-color: #412E2E;" onclick="window.location.href='package.php'">
+                  แพ็คเกจและการชำระเงิน
+                  <span class="arrow col">&#62;</span>
+                </div>
+              </div>
             </form>
     
-            <div class="buttons">
-              <a href="profile_edit.php" class="btn btn-warning" style="width: 150px; margin-right: 25px;">แก้ไขโปรไฟล์</a>
-            </div>
           </div>
         </div>
         </div>
