@@ -136,7 +136,8 @@
                                     <option value='1' <?php if($row['media_rate']==1) echo 'selected'; ?>>สำหรับเด็ก</option>
                                     <option value='2' <?php if($row['media_rate']==2) echo 'selected'; ?>>ทุกวัย</option>
                                     <option value='3' <?php if($row['media_rate']==3) echo 'selected'; ?>>13+</option>
-                                    <option value='4' <?php if($row['media_rate']==4) echo 'selected'; ?>>18+</option>
+                                    <option value='3' <?php if($row['media_rate']==4) echo 'selected'; ?>>15+</option>
+                                    <option value='4' <?php if($row['media_rate']==5) echo 'selected'; ?>>18+</option>
                                 </select>
                             </div>
                         </div>

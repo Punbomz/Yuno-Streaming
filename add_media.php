@@ -118,7 +118,8 @@
                                     <option value='1'>สำหรับเด็ก</option>
                                     <option value='2'>ทุกวัย</option>
                                     <option value='3'>13+</option>
-                                    <option value='4'>18+</option>
+                                    <option value='4'>15+</option>
+                                    <option value='5'>18+</option>
                                 </select>
                             </div>
                         </div>

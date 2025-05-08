@@ -1,5 +1,5 @@
 <?php $pageName = basename($_SERVER['PHP_SELF']); ?>
-<nav class="navbar fixed-top navbar-expand-lg black-bg">       
+<nav class="navbar fixed-top navbar-expand-lg black-bg" style="z-index: 3;">       
   <div class="container-fluid">
   <?php if($pageName=='login.php' or $pageName=='register.php') { ?>
     <div class="d-flex justify-content-between align-items-center w-100">
@@ -30,10 +30,10 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
           <li class="nav-item">
-            <a class="nav-link text-white" aria-current="page" href="index.php">หน้าหลัก</a>
+            <a class="nav-link" style="color: <?php if($pageName=='index.php') echo 'yellow;'; else echo 'white'; ?>" aria-current="page" href="index.php">หน้าหลัก</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white" aria-current="page" href="discover.php">ค้นพบ</a>
+            <a class="nav-link" style="color: <?php if($pageName=='discover.php' and $_GET['t']=="") echo 'yellow;'; else echo 'white'; ?>" aria-current="page" href="discover.php">ค้นพบ</a>
           </li>
           <?php
             $sql2 = "SELECT * FROM Type ORDER BY type_name LIMIT 5";
@@ -41,14 +41,14 @@
           ?>
           <?php foreach($result2 as $row2) { ?>
             <li class="nav-item">
-              <a class="nav-link text-white" aria-current="page" href="discover.php?t=<?php echo $row2['type_id']; ?>"><?php echo $row2['type_name']; ?></a>
+              <a class="nav-link" style="color: <?php if($pageName=='discover.php' and $_GET['t']==$row2['type_id']) echo 'yellow;'; else echo 'white'; ?>" aria-current="page" href="discover.php?t=<?php echo $row2['type_id']; ?>"><?php echo $row2['type_name']; ?></a>
             </li>
           <?php } ?>
       </ul>
           
-      <form class="d-flex" role="search" style="margin-right: 10px;">
+      <form action="discover.php" class="d-flex" role="search" style="margin-right: 10px;">
           <div class="input-group">
-              <input class="form-control" type="search" placeholder="ค้นหา" aria-label="Search">
+              <input name="srch" class="form-control" type="search" placeholder="ค้นหา" aria-label="Search" value="<?php echo $_GET['srch']; ?>">
               <button class="input-group-text search-btn border-start-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                   <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -81,7 +81,8 @@
               <a class="dropdown-toggle text-white" href="" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
               <ul class="dropdown-menu dropdown-menu-end mt-4">
                   <li><a class="dropdown-item" href="profile.php">โปรไฟล์</a></li>
-                  <li><a class="dropdown-item" href="watchlist.php">รายการที่อยากดู</a></li>
+                  <li><a class="dropdown-item" href="watchlist.php">รายการของฉัน</a></li>
+                  <li><a class="dropdown-item" href="history.php">ประวัติการรับชม</a></li>
                   <li><a class="dropdown-item" href="logout.php" onclick="return confirm('ยืนยันการออกจากระบบ?');">ออกจากระบบ</a></li>
               </ul>
           </div>
@@ -91,4 +92,4 @@
     <?php } ?>
   </div>
 </nav>
-<br><br><br>
+<br>

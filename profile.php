@@ -68,7 +68,7 @@
               </div>
 
               <div class="row justify-content-center mt-5 mb-4">
-                <div class="btn text-white shadow" style="background-color: #412E2E;" onclick="window.location.href='package.php'">
+                <div class="btn btn-light shadow" onclick="window.location.href='package.php'">
                   แพ็คเกจและการชำระเงิน
                   <span class="arrow col">&#62;</span>
                 </div>

@@ -95,6 +95,7 @@
 
                 $card = ['บัตรเครดิต', 'บัตรเดบิต'];
             ?>
+            
             <div class="modal fade" id="paymentSelect" tabindex="-1" aria-labelledby="paymentSelectLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content" style="background-color: #412E2E; max-width: 650px;">

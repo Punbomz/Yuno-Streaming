@@ -92,11 +92,6 @@
           <?php } ?>
         </a>
 
-        <div class="section section-narrow">
-          <span>จัดการอุปกรณ์และการเข้าถึง</span>
-          <span class="arrow">&#62;</span>
-        </div>
-
         <?php
             $sql_pay = "SELECT * FROM Payment WHERE user_id='".$_SESSION['user_id']."' AND payment_id = (SELECT payment_id FROM Payment_History WHERE user_id='".$_SESSION['user_id']."' ORDER BY payment_datetime DESC LIMIT 1)";
             $result_pay = mysqli_query($dbcon, $sql_pay);

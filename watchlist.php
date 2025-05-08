@@ -1,122 +1,266 @@
-<?php
-require('connect.php');
-
-// ไม่ต้องเช็ค session หรือ login
-$media_items = [];
-
-$dbcon->set_charset("utf8mb4");
-$sql = "SELECT 
-    m.media_id,
-    m.media_title,
-    m.media_desc,
-    m.media_img
-FROM 
-    Watchlist w
-JOIN 
-    Media m ON w.media_id = m.media_id
-WHERE 
-    w.user_id = 1;
-
-";
-$result = $dbcon->query($sql);
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $media_items[] = $row;
+<?php require('connect.php');
+    if(!isset($_SESSION['logined'])) {
+        echo "<script>alert('กรุณาเข้าสู่ระบบ!');
+        location.href='login.php';</script>";
+        exit;
     }
-}
+
+    $media_items = [];
+
+    $dbcon->set_charset("utf8mb4");
+    $sql = "SELECT 
+        m.media_id,
+        m.media_title,
+        m.media_desc,
+        m.media_img
+    FROM 
+        Watchlist w
+    JOIN 
+        Media m ON w.media_id = m.media_id
+    WHERE 
+        w.user_id = '".$_SESSION['user_id']."';
+
+    ";
+    $result = $dbcon->query($sql);
+
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $media_items[] = $row;
+        }
+    }
 ?>
 
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <title>Watchlist</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/mycss.css" rel="stylesheet">
-    <style>
+    <!DOCTYPE html>
+    <html lang="th">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title><?php echo web_title ?></title>
+        <link rel="icon" type="image/x-icon" href="<?php echo favicon; ?>">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="css/mycss.css" rel="stylesheet">
+        <style>
+            .watchlist-header {
+                position: fixed;
+                top: 70px; /* ปรับตามความสูง navbar */
+                left: 0;
+                right: 0;
+                z-index: 10;
+                padding: 20px 15%;
+            }
 
+            .watchlist-header h1 {
+                font-size: 48px;
+                font-weight: bold;
+                margin: 0;
+                margin-bottom: 1px;
+            }
 
-        .watchlist-header {
-            position: fixed;
-            top: 70px; /* ปรับตามความสูง navbar */
-            left: 0;
-            right: 0;
-            z-index: 10;
-            padding: 20px 15%;
-        }
+            .watchlist-scroll {
+                position: absolute;
+                top: 150px; /* ต้องไม่ชน navbar + header */
+                left: 0;
+                right: 0;
+                bottom: 0;
+                overflow-y: auto;
+                padding: 20px 15%;
+                color: white;
+            }
 
-        .watchlist-header h1 {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 0;
-            margin-bottom: 1px;
-        }
+            .watchlist-item {
+                display: flex;
+                margin-bottom: 40px;
+            }
 
-        .watchlist-scroll {
-            position: absolute;
-            top: 150px; /* ต้องไม่ชน navbar + header */
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow-y: auto;
-            padding: 20px 15%;
-            color: white;
-        }
+            .watchlist-item img {
+                width: 300px;
+                height: auto;
+                border-radius: 8px;
+                object-fit: cover;
+            }
 
-        .watchlist-item {
-            display: flex;
-            margin-bottom: 40px;
-        }
+            .watchlist-info {
+                margin-left: 30px;
+            }
 
-        .watchlist-item img {
-            width: 300px;
-            height: auto;
-            border-radius: 8px;
-            object-fit: cover;
-        }
+            .watchlist-info h2 {
+                font-size: 24px;
+                font-weight: bold;
+            }
 
-        .watchlist-info {
-            margin-left: 30px;
-        }
+            .watchlist-info p {
+                margin-top: 10px;
+                color: #ccc;
+            }
 
-        .watchlist-info h2 {
-            font-size: 24px;
-            font-weight: bold;
-        }
+            .poster {
+                transition: transform 0.4s ease-in-out;
+            }
 
-        .watchlist-info p {
-            margin-top: 10px;
-            color: #ccc;
-        }
-    </style>
-</head>
-<body class="dark-bg">
-    <?php require('navbar.php') ?>
+            .poster:hover {
+                transform: scale(1.02);
+                cursor: pointer;
+            }
 
-    <div class="watchlist-header dark-bg" >
-        <h1>Watchlist</h1>
-    </div>
+            .modalBg {
+                background-size: cover;
+                background-position: center;
+                filter: blur(12px);
+                height: 400px;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1;
+            }
 
-    <div class="watchlist-scroll">
-        <?php foreach ($media_items as $item): ?>
-            <div class="watchlist-item">
-                <img src="data:image/jpeg;base64,<?php echo base64_encode($item['media_img']); ?>" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
-                <div class="watchlist-info">
-                    <h2><?php echo htmlspecialchars($item['media_title']); ?></h2>
-                    <p><?php echo nl2br(htmlspecialchars($item['media_desc'])); ?></p>
+            .modalBg::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px); /* รองรับ Safari */
+                background-color: rgba(0, 0, 0, 0.4); /* ช่วยให้ข้อความเด่นขึ้น */
+                z-index: 2;
+            }
+
+            .modalBg::after {
+                content: '';
+                position: absolute;
+                bottom: 0; left: 0; right: 0;
+                height: 100px;
+                background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+                z-index: 3;
+            }
+
+            .text-truncate-multiline {
+                display: -webkit-box;
+                -webkit-line-clamp: 5;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .btn {
+                transition: transform 0.4s ease-in-out;
+            }
+
+            .btn:hover {
+                transform: scale(1.05);
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body class="dark-bg">
+        <?php require('navbar.php') ?>
+
+        <div class="watchlist-header dark-bg" >
+            <h1>Watchlist</h1>
+        </div>
+
+        <div class="watchlist-scroll">
+            <?php foreach ($media_items as $item) { ?>
+                <div class="watchlist-item poster" style="height: 250px;" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $item['media_id']; ?>);">
+                    <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
+                    <div class="watchlist-info">
+                        <h2><?php echo htmlspecialchars($item['media_title']); ?></h2>
+                        <p class="text-truncate-multiline"><?php echo nl2br(htmlspecialchars($item['media_desc'])); ?></p>
+                    </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-        <?php if (empty($media_items)): ?>
-            <p class="text-center">ไม่พบสื่อในระบบ</p>
-        <?php endif; ?>
-        <?php require('footer.php'); ?>
-    </div>
+            <?php } ?>
+            <?php if (empty($media_items)) { ?>
+                <p class="text-center">ไม่พบสื่อในระบบ</p>
+            <?php } ?>
+        </div>
+        
+        <?php include('modals.php'); ?>
 
-    <script src="js/bootstrap.js"></script>
-    <script src="js/bootstrap.bundle.js"></script>
+        <script src="js/bootstrap.bundle.js"></script>
 
-</body>
+        <script>
+             function toggleWatchlist2(mediaId) {
+                const iconSpan2 = document.getElementById('watchlist-icon2');
+
+                fetch('add_watchlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'id=' + encodeURIComponent(mediaId)
+                })
+                .then(response => response.text())
+                .then(result => {
+                    if (result.trim() === 'added') {
+                        iconSpan2.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                            </svg>`;
+                    } else if (result.trim() === 'removed') {
+                        iconSpan2.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                            </svg>`;
+                    }
+                });
+
+                window.location.reload();
+            }
+        </script>
+
+        <script>
+            const iconSpan2 = document.getElementById('watchlist-icon2');
+
+            function fetchMediaData(mediaId) {
+                fetch('get_media_data.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'media_id=' + encodeURIComponent(mediaId)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('media-poster').src = "img/media/posters/" + data.media_img;
+                    document.getElementById('media-title').innerText = data.media_title;
+                    document.getElementById('media-desc').innerText = data.media_desc;
+                    document.getElementById('media-release').innerText = data.media_release;
+                    document.getElementById('media-rate').innerText = data.media_rate;
+                    document.getElementById('media-genre').innerText = data.genres;
+                    document.getElementById('media-director').innerText = 'ผู้กำกับ: ' + data.directors;
+                    document.getElementById('media-actor').innerText = 'นักแสดง: ' + data.actors;
+                    document.getElementById('media-bg').style="background-image: url('img/media/posters/"+ data.media_img + "');";
+
+                    document.getElementById('play-btn').onclick = function() {
+                        window.location.href = "video.php?id=" + data.media_id + "&ep=" + data.episode;
+                    };
+
+                    document.getElementById('watchlist-btn2').onclick = function() {
+                        toggleWatchlist2(data.media_id);
+                    };
+
+                    if (data.watched == true) {
+                        document.getElementById('continue-p').innerText = data.continue;
+                    } else {
+                        document.getElementById('continue-p').innerText = '';
+                    }
+
+                    if (data.fav == true) {
+                        iconSpan2.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                            </svg>`;
+                    } else {
+                        iconSpan2.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                            </svg>`;
+                    }
+                });
+            }
+        </script>
+
+    </body>
 </html>
