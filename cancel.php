@@ -13,6 +13,7 @@
         echo "<script>alert('ยกเลิกการสมัครแพ็คเกจสำเร็จ!');
         history.back();</script>";
     } else {
-        header("Location: index.php");
+        echo "<script>location.href='index.php';</script>";
+    exit;
     }
 ?>

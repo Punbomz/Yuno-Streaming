@@ -247,6 +247,12 @@
                         document.getElementById('continue-p').innerText = '';
                     }
 
+                    if (data.type_id == 2) {
+                        document.getElementById('duration-p').innerText = data.duration;
+                    } else {
+                        document.getElementById('duration-p').innerText = data.duration + ' ตอน';
+                    }
+
                     if (data.fav == true) {
                         iconSpan2.innerHTML = `
                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">

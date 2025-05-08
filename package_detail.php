@@ -163,4 +163,5 @@
     </body>
     </html>
 
-<?php } else { header("Location: index.php"); } ?>
+<?php } else { echo "<script>location.href='index.php';</script>";
+    exit; } ?>

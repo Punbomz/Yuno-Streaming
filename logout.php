@@ -3,8 +3,9 @@
 <?php
     if(isset($_SESSION['logined'])) {
         session_destroy();
-        echo "<script>location.href='index.php';</script>";
+        echo "<script>location.href='login.php';</script>";
     } else {
-        header("Location: index.php");
+        echo "<script>location.href='login.php';</script>";
+    exit;
     }
 ?>

@@ -47,5 +47,6 @@
 
         echo "<script>alert('ลบมีเดียสำเร็จ!'); history.back();</script>";
 } else {
-    header("Location: index.php");
+    echo "<script>location.href='index.php';</script>";
+    exit;
 } ?>

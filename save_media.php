@@ -93,5 +93,6 @@
 		echo "<script>alert('บันทึกมีเดียสำเร็จ!');
         location.href='admin_media.php';</script>";
 } else {
-    header("Location: index.php");
+    echo "<script>location.href='index.php';</script>";
+    exit;
 } ?>

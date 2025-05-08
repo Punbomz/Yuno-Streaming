@@ -48,9 +48,11 @@
         }
     } else {
         if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) {
-            header("Location: admin_index.php");
+            echo "<script>location.href='admin_index.php';</script>";
+    exit;
         } else {
-            header("Location: index.php");
+            echo "<script>location.href='index.php';</script>";
+    exit;
         }
     }
 ?>

@@ -401,7 +401,7 @@
 
             <!-- เรื่องที่อาจสนใจ -->
             <div class="mb-5">
-                <h3 class="text-center">เรื่องที่คุณอาจสนใจ</h3>
+                <h3>เรื่องที่คุณอาจสนใจ</h3>
                 <div class="scroll-wrapper mt-3">
                     <button class="scroll-btn scroll-btn-left" data-target="scroll-container-<?php echo $i; ?>" data-direction="left">&#10094;</button>
                     <button class="scroll-btn scroll-btn-right" data-target="scroll-container-<?php echo $i; ?>" data-direction="right">&#10095;</button>
@@ -505,6 +505,12 @@
                     document.getElementById('continue-p').innerText = data.continue;
                 } else {
                     document.getElementById('continue-p').innerText = '';
+                }
+
+                if (data.type_id == 2) {
+                    document.getElementById('duration-p').innerText = data.duration;
+                } else {
+                    document.getElementById('duration-p').innerText = data.duration + ' ตอน';
                 }
 
                 if (data.fav == true) {

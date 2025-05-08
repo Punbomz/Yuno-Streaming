@@ -90,7 +90,7 @@
                 clearInterval(intervalId);
                 intervalId = setInterval(() => {
                     if (!video.paused && !video.ended) {
-                        const currentTime = video.currentTime;
+                        const currentTime = Math.floor(video.currentTime);
                         sendProgress(currentTime);
                     }
                 }, 5000); // ทุก 5 วินาที
@@ -98,7 +98,7 @@
 
             const stopAndSend = () => {
                 clearInterval(intervalId);
-                const currentTime = video.currentTime;
+                const currentTime = Math.floor(video.currentTime);
                 sendProgress(currentTime);
             }
 

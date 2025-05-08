@@ -19,6 +19,7 @@
                 </div>
                 <div class="col-md-7 text-center">
                     <h1 id="media-title"></h1>
+                    <p class="m-0" id="duration-p"></p>
                     <!-- ปุ่ม Play -->
                     <button id="play-btn" class="btn btn-warning m-4 shadow" style="width: 180px; height: 50px;" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">

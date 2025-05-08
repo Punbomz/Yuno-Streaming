@@ -1,7 +1,7 @@
 <?php $pageName = basename($_SERVER['PHP_SELF']); ?>
-<nav class="navbar fixed-top navbar-expand-lg black-bg" style="z-index: 3;">       
+<nav class="navbar fixed-top navbar-expand-lg black-bg" style="z-index: 9999;">       
   <div class="container-fluid">
-  <?php if($pageName=='login.php' or $pageName=='register.php') { ?>
+  <?php if($pageName=='login.php' or $pageName=='register.php' or $pageName=='forgot_password.php') { ?>
     <div class="d-flex justify-content-between align-items-center w-100">
       <!-- ปุ่ม back -->
       <a href="#" class="nav-link m-2" onclick="history.back();">

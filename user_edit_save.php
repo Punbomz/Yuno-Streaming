@@ -22,7 +22,6 @@
         $num = mysqli_num_rows($result);
 
         if($num!=0) {
-            echo $id;
             die("<script> alert('อีเมลนี้มีการสมัครสมาชิกแล้ว!'); history.back();</script>");
         }
 
@@ -76,9 +75,11 @@
         }
     } else {
         if(isset($_SESSION['logined']) and $_SESSION['user_lv']==2) {
-            header("Location: admin_index.php");
+            echo "<script>location.href='admin_index.php';</script>";
+    exit;
         } else {
-            header("Location: index.php");
+            echo "<script>location.href='index.php';</script>";
+    exit;
         }
     }
 ?>

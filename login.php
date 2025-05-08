@@ -1,5 +1,8 @@
 <?php require('connect.php'); ?>
-
+<?php if(isset($_SESSION['logined'])) {
+  echo "<script>location.href='index.php';</script>";
+  exit;
+} ?>
 <!DOCTYPE html>
 <html lang="th">
 

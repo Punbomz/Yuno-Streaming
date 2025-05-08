@@ -412,6 +412,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     document.getElementById('media-poster').src = "img/media/posters/" + data.media_img;
                     document.getElementById('media-title').innerText = data.media_title;
                     document.getElementById('media-desc').innerText = data.media_desc;
@@ -421,6 +422,7 @@
                     document.getElementById('media-director').innerText = 'ผู้กำกับ: ' + data.directors;
                     document.getElementById('media-actor').innerText = 'นักแสดง: ' + data.actors;
                     document.getElementById('media-bg').style="background-image: url('img/media/posters/"+ data.media_img + "');";
+                    document.getElementById('duration-p').innerText = data.duration;
 
                     document.getElementById('play-btn').onclick = function() {
                         window.location.href = "video.php?id=" + data.media_id + "&ep=" + data.episode;

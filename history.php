@@ -5,22 +5,24 @@
         exit;
     }
 
-    $sql = "SELECT 
-        m.media_id,
-        m.media_title,
-        m.media_desc,
-        m.media_img,
-        m.type_id,
-        h.watch_length,
-        h.episode
-    FROM 
-        History h
-    JOIN 
-        Media m ON h.media_id = m.media_id
-    WHERE 
-        h.user_id = '".$_SESSION['user_id']."
-    ORDER BY h.watch_date DESC';
-    ";
+    $sql = "SELECT COUNT(*) AS Episodes,
+            m.media_id,
+            m.media_title,
+            m.media_desc,
+            m.media_img,
+            m.type_id,
+            h.watch_length,
+            h.episode
+        FROM 
+            History h
+        JOIN 
+            Media m ON h.media_id = m.media_id
+        WHERE 
+            h.user_id = '" . $_SESSION['user_id'] . "'
+        GROUP BY 
+            m.media_id, h.episode
+        ORDER BY 
+            h.watch_date DESC";
     $result = $dbcon->query($sql);
 
     if ($result && $result->num_rows > 0) {
@@ -164,12 +166,46 @@
     <div class="history-scroll">
     <?php foreach ($media_items as $item) { ?>
         <div class="history-item poster" style="height: 250px;" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $item['media_id']; ?>);">
-            <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
-            <div class="history-info">
-                <h2><?php echo htmlspecialchars($item['media_title']); ?></h2>
-                <p class="text-truncate-multiline"><?php echo nl2br(htmlspecialchars($item['media_desc'])); ?></p>
-            </div>
+        <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
+        <div class="history-info">
+            <h2><?php echo htmlspecialchars($item['media_title']); ?></h2>
+            <p class="text-truncate-multiline"><?php echo nl2br(htmlspecialchars($item['media_desc'])); ?></p>
+            
+            <!-- เพิ่มข้อมูลตอนที่และเวลา -->
+            <strong><p class="mb-0" id="episode-<?php echo $item['media_id']; ?>">
+                <?php
+                    $duration = $item['watch_length'];
+                    $totalSeconds = $duration;
+
+                    if($item['type_id']==2) {
+                        if($totalSeconds < 60) {
+                            echo 'คุณดูไปแล้ว '.$totalSeconds.' วินาที';
+                        } else if($totalSeconds < 3600) {
+                            $m = floor($totalSeconds / 60);
+                            $totalSeconds -= $m*60;
+                            echo 'คุณดูไปแล้ว '.$m.' นาที '.$totalSeconds.' วินาที';
+                        } else {
+                            $m = floor($totalSeconds / 60);
+                            $h = floor($totalSeconds / 3600);
+                            echo 'คุณดูไปแล้ว '.$h.' ชั่วโมง '.$m.' นาที';
+                        }
+                    } else {
+                        if($totalSeconds < 60) {
+                            echo 'คุณดูตอนที่ '.$item['episode'].' ไปแล้ว '.$totalSeconds.' วินาที';
+                        } else if($totalSeconds < 3600) {
+                            $m = floor($totalSeconds / 60);
+                            $totalSeconds -= $m*60;
+                            echo 'คุณดูตอนที่ '.$item['episode'].' ไปแล้ว '.$m.' นาที '.$totalSeconds.' วินาที';
+                        } else {
+                            $m = floor($totalSeconds / 60);
+                            $h = floor($totalSeconds / 3600);
+                            echo 'คุณดูตอนที่ '.$item['episode'].' ไปแล้ว '.$h.' ชั่วโมง '.$m.' นาที';
+                        }
+                    }
+                ?></p>
+            <p class="" id="duration-<?php echo $item['media_id']; ?>"></p></strong>
         </div>
+    </div>
     <?php } ?>
             <?php if (empty($media_items)) { ?>
                 <p class="text-center">ไม่พบสื่อในระบบ</p>
@@ -246,6 +282,12 @@
                     document.getElementById('continue-p').innerText = data.continue;
                 } else {
                     document.getElementById('continue-p').innerText = '';
+                }
+
+                if (data.type_id == 2) {
+                    document.getElementById('duration-p').innerText = data.duration;
+                } else {
+                    document.getElementById('duration-p').innerText = data.duration + ' ตอน';
                 }
 
                 if (data.fav == true) {
