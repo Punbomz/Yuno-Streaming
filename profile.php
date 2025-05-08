@@ -23,7 +23,7 @@
         $row = mysqli_fetch_assoc($result);
       ?>
 
-    <div class="container justify-content-center text-center mt-5">
+    <div class="container justify-content-center text-center" style="margin-top: 100px;">
       <h1>โปรไฟล์</h1>
 
       <div class="container justify-content-center mt-5">
@@ -31,7 +31,7 @@
           <div class="col">
             <div class="row justify-content-center mb-2">
               <?php if($row['user_img']!='-') { ?>
-                <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-3 img-thumbnail" alt="Profile" style="width: 250px; height: 250px; object-fit: cover;">
+                <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-5" alt="Profile" style="width: 250px; height: 250px; object-fit: cover;">
               <?php } else { ?>
                 <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
                   <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

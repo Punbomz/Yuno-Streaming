@@ -212,7 +212,7 @@
                         </div>
                     </div>
                 <?php } else { ?>
-                    <h1 class="text-center">ยินดีต้อนรับเข้าสู่ Yuno!</h1>
+                    <h1 class="text-center mt-3">ยินดีต้อนรับเข้าสู่ Yuno!</h1>
                 <?php } ?>
                 </div>
             </div>

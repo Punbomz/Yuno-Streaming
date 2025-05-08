@@ -25,7 +25,7 @@
         $row = mysqli_fetch_assoc($result);
       ?>
 
-    <div class="container justify-content-center text-center mt-5">
+    <div class="container justify-content-center text-center" style="margin-top: 100px;">
       <h1>แก้ไขโปรไฟล์</h1>
 
       <div class="container justify-content-center mt-5">

@@ -14,14 +14,14 @@
 
       <!-- ชื่อแบรนด์ตรงกลาง -->
       <div class="mx-auto">
-        <a class="navbar-brand text-white" href="index.php">Yuno</a>
+        <a class="navbar-brand text-white" href="index.php"><img src="img/Logo.png" style="width: auto; height: 50px;"></a>
       </div>
 
       <!-- ช่องว่างขวาเพื่อบาลานซ์กับปุ่ม back -->
       <div style="width: 36px; margin: 0 1rem;"></div>
     </div>
     <?php } else { ?>
-      <a class="navbar-brand text-white" href="index.php">Yuno</a>
+      <a class="navbar-brand text-white" href="index.php"><img src="img/Logo.png" style="width: auto; height: 50px;"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -69,7 +69,7 @@
         ?>
           <div style="margin-right: 10px;">
             <?php if($row['user_img']!='-') { ?>
-              <img src="img/profile/<?php echo $row['user_img']; ?>" class="img-thumbnail" style="width: 40px; height: 40px;">
+              <img src="img/profile/<?php echo $row['user_img']; ?>" class="rounded-5" style="width: 40px; height: 40px; object-fit: cover;">
             <?php } else { ?>
               <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

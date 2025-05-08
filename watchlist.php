@@ -157,11 +157,11 @@
     <body class="dark-bg">
         <?php require('navbar.php') ?>
 
-        <div class="watchlist-header dark-bg" >
+        <div class="watchlist-header dark-bg mt-2">
             <h1>Watchlist</h1>
         </div>
 
-        <div class="watchlist-scroll">
+        <div class="watchlist-scroll mt-5">
             <?php foreach ($media_items as $item) { ?>
                 <div class="watchlist-item poster" style="height: 250px;" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $item['media_id']; ?>);">
                     <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">

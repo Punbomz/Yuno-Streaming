@@ -230,11 +230,11 @@
         $result_srch  = mysqli_query($dbcon, $sql_srch);
     ?>
 
-    <div class="row align-items-center justify-content-between mb-3">
-        <div class="col-auto">
+    <div class="row align-items-center justify-content-between mb-3 mt-5">
+        <div class="col-auto mt-5">
             <h1 class="mb-0">Discover</h1>
         </div>
-        <div class="col-auto d-flex gap-3">
+        <div class="col-auto d-flex gap-3 mt-5">
             <select name="t" class="form-select text-center" style="width: 200px;" 
                 onchange="window.location.href='discover.php?srch=<?php echo $_GET['srch']; ?>&g=<?php echo $_GET['g']; ?>&t=' + this.value;">
                 <option value="">ประเภท</option>

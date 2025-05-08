@@ -159,11 +159,11 @@
 <body class="dark-bg">
     <?php require('navbar.php') ?>
 
-    <div class="history-header dark-bg" >
+    <div class="history-header dark-bg mt-2" >
         <h1>History</h1>
     </div>
 
-    <div class="history-scroll">
+    <div class="history-scroll mt-5">
     <?php foreach ($media_items as $item) { ?>
         <div class="history-item poster" style="height: 250px;" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $item['media_id']; ?>);">
         <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
