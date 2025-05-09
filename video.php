@@ -44,16 +44,16 @@
             $row_progress = mysqli_fetch_assoc($res_progress);
             $start_time = isset($row_progress['watch_length']) ? (int)$row_progress['watch_length'] : 0;
 
-            $sql = "SELECT m.media_title, m.media_id, f.* FROM Media m INNER JOIN Media_Files f ON m.media_id=f.media_id WHERE m.media_id = '$id' ORDER BY f.episode ASC";
+            $sql = "SELECT m.media_title, m.media_id, m.type_id, f.* FROM Media m INNER JOIN Media_Files f ON m.media_id=f.media_id WHERE m.media_id = '$id' ORDER BY f.episode ASC";
             $result = mysqli_query($dbcon, $sql);
             foreach($result as $tmp) {
                 if($tmp['episode']==$ep) {
                     $fname = $tmp['file_name'];
                     $title = $tmp['media_title'];
+                    $type_id = $tmp['type_id'];
                     break;
                 }
             }
-            $num = mysqli_num_rows($result);
         ?>
 
         <div class="container mt-4">
@@ -61,7 +61,7 @@
                 <div class="col">
                     <h3 class="text-white"><?php echo $title; ?></h3>
                 </div>
-                <?php if($num>1) { ?>
+                <?php if($type_id!=2) { ?>
                     <div class="col d-flex justify-content-end">
                         <select name='ep' class="form-select w-25 text-center" onchange="window.location.href='video.php?id=<?php echo $id; ?>&ep='+ this.value;">
                             <?php $i=1; foreach($result as $row) { ?>
