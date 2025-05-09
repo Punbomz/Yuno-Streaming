@@ -20,7 +20,7 @@
         <?php require('navbar.php') ?>
 
         <div class="container justify-content-center text-center mt-5">
-            <h1>แพ็คเกจ</h1>
+            <h1 style="margin-top: 100px;">แพ็คเกจ</h1>
 
             <?php
                 $sql = "SELECT package_name, package_start, package_end FROM User WHERE user_id='".$_SESSION['user_id']."'";

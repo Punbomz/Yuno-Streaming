@@ -74,7 +74,7 @@
     <?php require('navbar.php'); ?>
 
     <div class="container justify-content-center text-center mt-5">
-      <h1>แพ็คเกจและการชำระเงิน</h1>
+      <h1 style="margin-top: 100px;">แพ็คเกจและการชำระเงิน</h1>
 
       <?php
         $sql = "SELECT * FROM Package WHERE package_name = (SELECT package_name FROM User WHERE user_id='".$_SESSION['user_id']."')";

@@ -52,7 +52,7 @@
             }
 
             // ผู้ใช้ใหม่
-            $sql_user = "SELECT COUNT(*) AS NewUsers FROM User WHERE MONTH(register_date) = $month AND YEAR(register_date) = $year";
+            $sql_user = "SELECT COUNT(*) AS NewUsers FROM User WHERE MONTH(register_date) = $month AND YEAR(register_date) = $year AND user_lv=0";
             $result_user = mysqli_query($dbcon, $sql_user);
             $user = mysqli_fetch_assoc($result_user);
 

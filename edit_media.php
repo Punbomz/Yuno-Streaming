@@ -66,7 +66,7 @@
                         <div class="row mt-3 justify-content-center">
                             <div class="w-50">
                                 <label class="form-label">รายละเอียด</label>
-                                <textarea rows="4" name="detail" class="form-control mt-2" placeholder="ระบุรายละเอียด" required><?php echo $row['media_desc']; ?></textarea>
+                                <textarea rows="5" name="detail" class="form-control mt-2" placeholder="ระบุรายละเอียด" required><?php echo $row['media_desc']; ?></textarea>
                             </div>
                         </div>
                     </div>

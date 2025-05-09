@@ -1,5 +1,17 @@
 <?php require('connect.php') ?>
 
+<?php
+    $sql_package = "SELECT package_name FROM User WHERE user_id = '".$_SESSION['user_id']."'";
+    $result_package = mysqli_query($dbcon, $sql_package);
+    $row_package = mysqli_fetch_assoc($result_package);
+
+    if(is_null($row_package['package_name'])) {
+        echo "<script>alert('กรุณาสมัครแพ็คเกจ!');
+        location.href='package_detail.php';</script>";
+        exit;
+    } 
+?>
+
 <?php if(isset($_SESSION['logined'])) { ?>
 
     <!DOCTYPE html>
