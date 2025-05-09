@@ -158,13 +158,14 @@
         <?php require('navbar.php') ?>
 
         <?php
-            $sql_rand = "SELECT * FROM Media ORDER BY RAND() LIMIT 1";
+            $sql_rand = "SELECT * FROM Media WHERE media_status=1 ORDER BY RAND() LIMIT 1";
             $result_rand = mysqli_query($dbcon, $sql_rand);
             $row_rand = mysqli_fetch_assoc($result_rand);
             $num_rand = mysqli_num_rows($result_rand);
 
-            $sql_list = "SELECT * FROM Watchlist WHERE user_id='".$_SESSION['user_id']."'";
+            $sql_list = "SELECT w.*, m.* FROM Watchlist w INNER JOIN Media m ON w.media_id=m.media_id WHERE m.media_status=1 AND w.user_id='".$_SESSION['user_id']."'";
             $result_list = mysqli_query($dbcon, $sql_list);
+
             $watchlist = [];
             foreach($result_list as $wl) {
                 $watchlist[] = $wl['media_id'];
@@ -223,14 +224,14 @@
             
                 <?php
                     $sql_top = "SELECT m.*, h.view_count FROM Media m
-                                JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id ORDER BY h.view_count DESC LIMIT 10";
+                                JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id WHERE m.media_status=1 ORDER BY h.view_count DESC LIMIT 10";
                     $result_top = mysqli_query($dbcon, $sql_top);
 
                     $sql_history = "SELECT m.* FROM Media m
-                                LEFT JOIN History h ON m.media_id = h.media_id ORDER BY h.watch_date DESC LIMIT 20";
+                                LEFT JOIN History h ON m.media_id = h.media_id WHERE m.media_status=1 AND h.user_id='".$_SESSION['user_id']."' ORDER BY h.watch_date DESC LIMIT 20";
                     $result_history = mysqli_query($dbcon, $sql_history);
 
-                    $sql_latest = "SELECT * FROM Media ORDER BY media_id DESC LIMIT 20";
+                    $sql_latest = "SELECT * FROM Media WHERE media_status=1 ORDER BY media_id DESC LIMIT 20";
                     $result_latest = mysqli_query($dbcon, $sql_latest);
                 ?>
                 <?php if(mysqli_num_rows($result_top)!=0) { ?>
@@ -245,7 +246,7 @@
                                     <div class="poster-wrapper">
                                         <img src="img/media/posters/<?php echo $t['media_img']; ?>" 
                                             class="rounded-3 poster shadow" 
-                                            style="height: 100%; object-fit: cover;"
+                                            style="width: 180px; height: 250px; object-fit: cover;"
                                             data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $t['media_id']; ?>);">
                                     </div>
                                 <?php } ?>
@@ -253,9 +254,9 @@
                     </div>
                 <?php } ?>
 
-                <?php if(mysqli_num_rows($result_list)!=0) { ?>
+                <?php if(mysqli_num_rows($result_history)!=0) { ?>
                     <div class="mb-5 mt-5">
-                        <a href="watchlist.php" class="text-decoration-none text-white"><h3>รายการของฉัน</h3></a>
+                        <a href="watchlist.php" class="text-decoration-none text-white"><h3>รับชมต่อ</h3></a>
                         <div class="scroll-wrapper mt-3">
                             <button class="scroll-btn scroll-btn-left" data-target="scroll-container-2" data-direction="left">&#10094;</button>
                             <button class="scroll-btn scroll-btn-right" data-target="scroll-container-2" data-direction="right">&#10095;</button>
@@ -265,7 +266,28 @@
                                     <div class="poster-wrapper">
                                         <img src="img/media/posters/<?php echo $h['media_img']; ?>" 
                                             class="rounded-3 poster shadow" 
-                                            style="height: 100%; object-fit: cover;"
+                                            style="width: 180px; height: 250px; object-fit: cover;"
+                                            data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $h['media_id']; ?>);">
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+
+                <?php if(mysqli_num_rows($result_list)!=0) { ?>
+                    <div class="mb-5 mt-5">
+                        <a href="watchlist.php" class="text-decoration-none text-white"><h3>รายการของฉัน</h3></a>
+                        <div class="scroll-wrapper mt-3">
+                            <button class="scroll-btn scroll-btn-left" data-target="scroll-container-3" data-direction="left">&#10094;</button>
+                            <button class="scroll-btn scroll-btn-right" data-target="scroll-container-3" data-direction="right">&#10095;</button>
+
+                            <div id="scroll-container-3" class="scroll-container">
+                                <?php foreach($result_list as $wa) { ?> 
+                                    <div class="poster-wrapper">
+                                        <img src="img/media/posters/<?php echo $wa['media_img']; ?>" 
+                                            class="rounded-3 poster shadow" 
+                                            style="width: 180px; height: 250px; object-fit: cover;"
                                             data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $h['media_id']; ?>);">
                                     </div>
                                 <?php } ?>
@@ -277,15 +299,15 @@
                     <div class="mb-5 mt-5">
                         <a href="discover.php?t=new" class="text-decoration-none text-white"><h3>มาใหม่ล่าสุด</h3></a>
                         <div class="scroll-wrapper mt-3">
-                            <button class="scroll-btn scroll-btn-left" data-target="scroll-container-3" data-direction="left">&#10094;</button>
-                            <button class="scroll-btn scroll-btn-right" data-target="scroll-container-3" data-direction="right">&#10095;</button>
+                            <button class="scroll-btn scroll-btn-left" data-target="scroll-container-4" data-direction="left">&#10094;</button>
+                            <button class="scroll-btn scroll-btn-right" data-target="scroll-container-4" data-direction="right">&#10095;</button>
 
-                            <div id="scroll-container-3" class="scroll-container">
+                            <div id="scroll-container-4" class="scroll-container">
                                 <?php foreach($result_latest as $l) { ?> 
                                     <div class="poster-wrapper">
                                         <img src="img/media/posters/<?php echo $l['media_img']; ?>" 
                                             class="rounded-3 poster shadow" 
-                                            style="height: 100%; object-fit: cover;"
+                                            style="width: 180px; height: 250px; object-fit: cover;"
                                             data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $l['media_id']; ?>);">
                                     </div>
                                 <?php } ?>
@@ -294,10 +316,10 @@
                     </div>
 
                     <?php
-                        $i = 4;
+                        $i = 5;
                         foreach($result_type as $type) {
 
-                            $sql_t = "SELECT * FROM Media WHERE type_id='".$type['type_id']."' ORDER BY media_id DESC";
+                            $sql_t = "SELECT * FROM Media WHERE media_status=1 AND type_id='".$type['type_id']."' ORDER BY media_id DESC";
                             $result_t = mysqli_query($dbcon, $sql_t);
                     ?>
                         <?php if(mysqli_num_rows($result_t) != 0) { ?>
@@ -312,7 +334,7 @@
                                             <div class="poster-wrapper">
                                                 <img src="img/media/posters/<?php echo $tt['media_img']; ?>" 
                                                     class="rounded-3 poster shadow" 
-                                                    style="height: 100%; object-fit: cover;"
+                                                    style="width: 180px; height: 250px; object-fit: cover;"
                                                     data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $tt['media_id']; ?>);">
                                             </div>
                                         <?php } ?>

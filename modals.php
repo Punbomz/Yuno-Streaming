@@ -14,7 +14,7 @@
                 <div class="col-md-5 text-center">
                     <!-- รูปโปสเตอร์ -->
                     <img id="media-poster"
-                        style="width: 300px; height: auto; object-fit: cover; margin: 20px auto; display: block;
+                        style="width: 300px; height: 400px; object-fit: cover; margin: 20px auto; display: block;
                             border-radius: 12px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);">
                 </div>
                 <div class="col-md-7 text-center">

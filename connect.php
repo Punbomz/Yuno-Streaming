@@ -16,4 +16,5 @@
 		echo 'ติดต่อฐานข้อมูลไม่สำเร็จ';
 	}
 	mysqli_query($dbcon,"SET NAMES UTF8");
+	mysqli_set_charset($dbcon, "utf8mb4");
 ?>

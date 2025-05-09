@@ -8,7 +8,7 @@
 
     $sql = "INSERT INTO History (user_id, media_id, episode, watch_length)
             VALUES ('$user_id', '$media_id', '$episode', '$time')
-            ON DUPLICATE KEY UPDATE watch_length = '$time'";
+            ON DUPLICATE KEY UPDATE watch_length = '$time', episode='$episode'";
 
     mysqli_query($dbcon, $sql);
 ?>

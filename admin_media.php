@@ -147,7 +147,7 @@
                         <?php if($c >= $start and $c <= $end) { ?>
                             <tr>
                             <td style="background-color: #412E2E;"><?php echo $i; ?></td>
-                            <td style="background-color: #412E2E;"><img class="rounded-3" src="img/media/posters/<?php echo $row['media_img']; ?>" style="width: 144px; height: 193px;"></td>
+                            <td style="background-color: #412E2E;"><img class="rounded-3" src="img/media/posters/<?php echo $row['media_img']; ?>" style="width: 144px; height: 193px; object-fit: cover;"></td>
                             <td style="background-color: #412E2E;"><?php echo $row['media_title']; ?></td>
                             <td style="background-color: #412E2E;"><?php echo $row['type_name']; ?></td>
                             <td style="background-color: #412E2E;"><?php echo $row['Views']; ?></td>

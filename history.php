@@ -11,6 +11,7 @@
             m.media_desc,
             m.media_img,
             m.type_id,
+            m.media_status,
             h.watch_length,
             h.episode
         FROM 
@@ -18,7 +19,7 @@
         JOIN 
             Media m ON h.media_id = m.media_id
         WHERE 
-            h.user_id = '" . $_SESSION['user_id'] . "'
+            h.user_id = '" . $_SESSION['user_id'] . "' AND m.media_status=1
         GROUP BY 
             m.media_id, h.episode
         ORDER BY 
@@ -166,7 +167,7 @@
     <div class="history-scroll mt-5">
     <?php foreach ($media_items as $item) { ?>
         <div class="history-item poster" style="height: 250px;" data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $item['media_id']; ?>);">
-        <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: auto;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
+        <img src="img/media/posters/<?php echo $item['media_img']; ?>" style="width: 180px; height: 250px; object-fit: cover;" alt="<?php echo htmlspecialchars($item['media_title']); ?>">
         <div class="history-info">
             <h2><?php echo htmlspecialchars($item['media_title']); ?></h2>
             <p class="text-truncate-multiline"><?php echo nl2br(htmlspecialchars($item['media_desc'])); ?></p>

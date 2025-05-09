@@ -172,9 +172,8 @@
     <?php
         extract($_GET);
 
-        $sql_all = "SELECT * FROM Media ORDER BY RAND() LIMIT 20";
-
-        $sql_srch = "SELECT m.* FROM Media m INNER JOIN Medias_Genre mg ON m.media_id=mg.media_id WHERE 1";
+        $sql_all = "SELECT * FROM Media WHERE media_status=1 ORDER BY RAND() LIMIT 20";
+        $sql_srch = "SELECT m.* FROM Media m INNER JOIN Medias_Genre mg ON m.media_id=mg.media_id WHERE m.media_status=1";
         if(isset($srch) and $srch!="") {
             $sql_srch .= " AND m.media_title LIKE '%$srch%'";
         }
@@ -199,10 +198,10 @@
         if((!isset($t) or $t=="") or (isset($t) and $t=='hit')) {
             $first = 'อันดับสูงสุดวันนี้';
             $sql = "SELECT m.*, h.view_count FROM Media m
-                        JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id ORDER BY h.view_count DESC LIMIT 10";
+                        JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id WHERE m.media_status=1 ORDER BY h.view_count DESC LIMIT 10";
         } else if($t=='new') {
             $first = 'มาใหม่ล่าสุด';
-            $sql = "SELECT * FROM Media m INNER JOIN Medias_Genre mg ON m.media_id=mg.media_id WHERE 1";
+            $sql = "SELECT * FROM Media m INNER JOIN Medias_Genre mg ON m.media_id=mg.media_id WHERE m.media_status=1";
             if(isset($g) and $g!="") {
                 $sql .= " AND mg.genre_id = '$g'";
             }
@@ -211,17 +210,13 @@
         } else {
             $first = $row_type_name['type_name'].'อันดับสูงสุดวันนี้';
             $sql = "SELECT m.*, h.view_count FROM Media m
-                        JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id WHERE m.type_id='$t' ORDER BY h.view_count DESC LIMIT 10";
+                        JOIN (SELECT media_id, COUNT(*) AS view_count FROM History GROUP BY media_id) h ON m.media_id = h.media_id WHERE m.type_id='$t' AND m.media_status=1 ORDER BY h.view_count DESC LIMIT 10";
         }
         
         $result = mysqli_query($dbcon, $sql);
         $num = mysqli_num_rows($result);
 
-        $sql_history = "SELECT m.* FROM Media m
-                    LEFT JOIN History h ON m.media_id = h.media_id ORDER BY h.watch_date DESC LIMIT 20";
-        $result_history = mysqli_query($dbcon, $sql_history);
-
-        $sql_latest = "SELECT * FROM Media ORDER BY media_id DESC LIMIT 20";
+        $sql_latest = "SELECT * FROM Media WHERE media_status=1 ORDER BY media_id DESC LIMIT 20";
         $result_latest = mysqli_query($dbcon, $sql_latest);
 
         $result_all = mysqli_query($dbcon, $sql_all);
@@ -276,7 +271,7 @@
                                         <div class="poster-wrapper">
                                             <img src="img/media/posters/<?php echo $m['media_img']; ?>" 
                                                 class="rounded-3 poster shadow" 
-                                                style="height: 100%; object-fit: cover;"
+                                                style="width: 180px; height: 250px; object-fit: cover;"
                                                 data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $m['media_id']; ?>);">
                                         </div>
                                     <?php } ?>
@@ -296,7 +291,7 @@
                                         <div class="poster-wrapper">
                                             <img src="img/media/posters/<?php echo $l['media_img']; ?>" 
                                                 class="rounded-3 poster shadow" 
-                                                style="height: 100%; object-fit: cover;"
+                                                style="width: 180px; height: 250px; object-fit: cover;"
                                                 data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $l['media_id']; ?>);">
                                         </div>
                                     <?php } ?>
@@ -310,7 +305,7 @@
                     <?php
                         $i = 4;
                         foreach($result_type as $type) {
-                            $sql_t = "SELECT m.* FROM Media m LEFT JOIN Medias_Genre mg ON m.media_id = mg.media_id WHERE 1";
+                            $sql_t = "SELECT m.* FROM Media m LEFT JOIN Medias_Genre mg ON m.media_id = mg.media_id WHERE m.media_status=1";
                             if(isset($g) and $g!="") {
                                 $sql_t .= " AND mg.genre_id = '$g'";
                             }
@@ -335,7 +330,7 @@
                                             <div class="poster-wrapper">
                                                 <img src="img/media/posters/<?php echo $tt['media_img']; ?>" 
                                                     class="rounded-3 poster shadow" 
-                                                    style="height: 100%; object-fit: cover;"
+                                                    style="width: 180px; height: 250px; object-fit: cover;"
                                                     data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $tt['media_id']; ?>);">
                                             </div>
                                         <?php } ?>
@@ -347,7 +342,7 @@
                     <!-- หมวดหมู่ -->
                     <?php
                         foreach($result_genre as $genre) {
-                            $sql_g = "SELECT * FROM Medias_Genre mg INNER JOIN Media m ON mg.media_id=m.media_id WHERE 1";
+                            $sql_g = "SELECT * FROM Medias_Genre mg INNER JOIN Media m ON mg.media_id=m.media_id WHERE m.media_status=1";
                             if(isset($t) and $t!="" and $t!='hit' and $t!='new') {
                                 $sql_g .= " AND m.type_id = '$t'";
                             }
@@ -372,7 +367,7 @@
                                             <div class="poster-wrapper">
                                                 <img src="img/media/posters/<?php echo $gg['media_img']; ?>" 
                                                     class="rounded-3 poster shadow" 
-                                                    style="height: 100%; object-fit: cover;"
+                                                    style="width: 180px; height: 250px; object-fit: cover;"
                                                     data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $gg['media_id']; ?>);">
                                             </div>
                                         <?php } ?>
@@ -390,7 +385,7 @@
                             <li style="height: 25vh;">
                                 <img src="img/media/posters/<?php echo $sc['media_img']; ?>" 
                                     class="rounded-3 poster shadow" 
-                                    style="height: 100%; object-fit: cover;"
+                                    style="width: 180px; height: 250px; object-fit: cover;"
                                     data-bs-toggle="modal" data-bs-target="#movieModal" 
                                     onclick="fetchMediaData(<?php echo $sc['media_id']; ?>);">
                             </li>
@@ -411,7 +406,7 @@
                             <div class="poster-wrapper">
                                 <img src="img/media/posters/<?php echo $a['media_img']; ?>" 
                                     class="rounded-3 poster shadow" 
-                                    style="height: 100%; object-fit: cover;"
+                                    style="width: 180px; height: 250px; object-fit: cover;"
                                     data-bs-toggle="modal" data-bs-target="#movieModal" onclick="fetchMediaData(<?php echo $a['media_id']; ?>);">
                             </div>
                         <?php } ?>

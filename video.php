@@ -33,27 +33,33 @@
         <?php
             extract($_GET);
 
+            $ep = isset($_GET['ep']) ? intval($_GET['ep']) : 1;
             $user_id = $_SESSION['user_id'];
-            $ep_now = isset($ep) ? $ep : 1;
 
             $sql_progress = "SELECT watch_length FROM History 
                             WHERE user_id = '$user_id' 
                             AND media_id = '$id' 
-                            AND episode = '$ep_now'";
+                            AND episode = '$ep'";
             $res_progress = mysqli_query($dbcon, $sql_progress);
             $row_progress = mysqli_fetch_assoc($res_progress);
             $start_time = isset($row_progress['watch_length']) ? (int)$row_progress['watch_length'] : 0;
 
             $sql = "SELECT m.media_title, m.media_id, f.* FROM Media m INNER JOIN Media_Files f ON m.media_id=f.media_id WHERE m.media_id = '$id' ORDER BY f.episode ASC";
             $result = mysqli_query($dbcon, $sql);
-            $row = mysqli_fetch_assoc($result);
+            foreach($result as $tmp) {
+                if($tmp['episode']==$ep) {
+                    $fname = $tmp['file_name'];
+                    $title = $tmp['media_title'];
+                    break;
+                }
+            }
             $num = mysqli_num_rows($result);
         ?>
 
         <div class="container mt-4">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="text-white"><?php echo $row['media_title']; ?></h3>
+                    <h3 class="text-white"><?php echo $title; ?></h3>
                 </div>
                 <?php if($num>1) { ?>
                     <div class="col d-flex justify-content-end">
@@ -68,7 +74,7 @@
             
             <div class="video-container mt-3">
                 <video id="videoPlayer" width="100%" height="auto" controls autoplay>
-                    <source src="files/<?php echo $row['file_name']; ?>" type="video/mp4">
+                    <source src="files/<?php echo $fname; ?>" type="video/mp4">
                     เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
                 </video>
             </div>
@@ -80,7 +86,7 @@
         <script>
             const video = document.getElementById('videoPlayer');
             const mediaId = <?php echo json_encode($id); ?>;
-            const episode = <?php echo json_encode(isset($ep) ? $ep : 1); ?>;
+            const episode = <?php echo json_encode($ep); ?>;
             const userId = <?php echo json_encode($_SESSION['user_id']); ?>;
             const startTime = <?php echo json_encode($start_time); ?>;
 

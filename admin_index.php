@@ -73,11 +73,11 @@
             }
 
             $data = [["Package Name", "Users"]];
-            $sql_pk = "SELECT pk.package_name, COUNT(u.user_id) AS total_user
-                FROM User u
-                JOIN Package pk ON u.package_name = pk.package_name
-                WHERE u.user_lv = 0
-                GROUP BY pk.package_name
+            $sql_pk = "SELECT ph.package_name, COUNT(ph.user_id) AS total_user
+                FROM Payment_History ph
+                JOIN User u ON u.user_id = ph.user_id
+                WHERE u.user_lv = 0 AND u.package_name=ph.package_name AND MONTH(ph.payment_datetime) = $month AND YEAR(ph.payment_datetime) = $year
+                GROUP BY ph.package_name
                 ORDER BY total_user ASC";
 
             $result_pk = mysqli_query($dbcon, $sql_pk);
@@ -135,7 +135,7 @@
 
                 <div class="mt-3 pt-3">
                     <label class="text-white">รายได้</label>
-                    <h3 class="mt-2 text-white">$<?php echo $income; ?></h3>
+                    <h3 class="mt-2 text-white">฿<?php echo $income; ?></h3>
                 </div>
             </div>
 
