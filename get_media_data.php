@@ -97,14 +97,16 @@
     
                 $duration = $row_file['media_duration'];
                 $totalSeconds = round($duration * 60);
-                $h = floor($totalSeconds / 3600);
-                $m = floor(($totalSeconds % 3600) / 60);
-    
+                
                 if($totalSeconds < 60) {
                     $data['duration'] = $totalSeconds.' วินาที';
                 } else if($totalSeconds < 3600) {
+                    $m = floor(($totalSeconds % 3600) / 60);
+                    $totalSeconds -= ($m * 60);
                     $data['duration'] = $m.' นาที '.$totalSeconds.' วินาที';
                 } else {
+                    $h = floor($totalSeconds / 3600);
+                    $m = floor(($totalSeconds % 3600) / 60);
                     $data['duration'] = $h.' ชั่วโมง '.$m.' นาที';
                 }
             } else {
