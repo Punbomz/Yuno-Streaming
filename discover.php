@@ -505,7 +505,7 @@
                 if (data.type_id == 2) {
                     document.getElementById('duration-p').innerText = data.duration;
                 } else {
-                    document.getElementById('duration-p').innerText = data.duration + ' ตอน';
+                    document.getElementById('duration-p').innerText = data.duration;
                 }
 
                 if (data.fav == true) {

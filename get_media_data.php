@@ -36,7 +36,7 @@
             }
 
             $rate = ['สำหรับเด็ก', 'ทุกวัย', '13+', '15+', '18+'];
-            $data['media_rate'] = $rate[$data['media_rate']];
+            $data['media_rate'] = $rate[$data['media_rate']-1];
 
             $sql_watch = "SELECT * FROM Watchlist WHERE media_id = '$media_id'";
             $result_watch = mysqli_query($dbcon, $sql_watch);
