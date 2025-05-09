@@ -58,7 +58,7 @@
                 $totalSeconds = $duration;
 
                 if($data['type_id']==2) {
-                    if($totalSeconds < 60) {
+                    if($totalSeconds > 0 and $totalSeconds < 60) {
                         $data['continue'] = 'คุณดูไปแล้ว '.$totalSeconds.' วินาที';
                     } else if($totalSeconds < 3600) {
                         $m = floor($totalSeconds / 60);
@@ -70,7 +70,7 @@
                         $data['continue'] = 'คุณดูไปแล้ว '.$h.' ชั่วโมง '.$m.' นาที';
                     }
                 } else {
-                    if($totalSeconds < 60) {
+                    if($totalSeconds > 0 and $totalSeconds < 60) {
                         $data['continue'] = 'คุณดูตอนที่ '.$row_history['episode'].' ไปแล้ว '.$totalSeconds.' วินาที';
                     } else if($totalSeconds < 3600) {
                         $m = floor($totalSeconds / 60);
