@@ -24,6 +24,12 @@
             }
         }
 
+        $sql = "DELETE FROM Media_Actor WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
+
+        $sql = "DELETE FROM Media_Director WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
+
         $sql2 = "DELETE FROM Media WHERE media_id='$id'";
         $result2 = mysqli_query($dbcon, $sql2);
 
@@ -44,12 +50,6 @@
         if(!$result4) {
             die('<script>alert("ลบมีเดียไม่สำเร็จ!"); history.back();</script>');
         }
-        
-        $sql = "DELETE FROM Media_Actor WHERE media_id = '$id'";
-        $result = mysqli_query($dbcon, $sql);
-
-        $sql = "DELETE FROM Media_Director WHERE media_id = '$id'";
-        $result = mysqli_query($dbcon, $sql);
 
         echo "<script>alert('ลบมีเดียสำเร็จ!'); history.back();</script>";
 } else {
