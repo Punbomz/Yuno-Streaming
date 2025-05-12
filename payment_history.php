@@ -26,7 +26,7 @@
             <h5>การชำระเงินรายเดือน</h5>
         </div>
         <?php
-            $sql = "SELECT u.package_name, u.package_start, u.package_end, p.price FROM User u INNER JOIN Package p ON p.package_name=u.package_name WHERE user_id='".$_SESSION['user_id']."'";
+            $sql = "SELECT u.package_name, u.package_start, u.package_end, p.price FROM User_Package u INNER JOIN Package p ON p.package_name=u.package_name WHERE user_id='".$_SESSION['user_id']."'";
             $result = mysqli_query($dbcon, $sql);
             $row = mysqli_fetch_assoc($result);
         ?>
