@@ -1,7 +1,7 @@
 <?php require('connect.php') ?>
 
 <?php
-    $sql_package = "SELECT package_name FROM User WHERE user_id = '".$_SESSION['user_id']."'";
+    $sql_package = "SELECT package_name FROM User_Package WHERE user_id = '".$_SESSION['user_id']."'";
     $result_package = mysqli_query($dbcon, $sql_package);
     $row_package = mysqli_fetch_assoc($result_package);
 

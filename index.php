@@ -163,7 +163,7 @@
             $row_rand = mysqli_fetch_assoc($result_rand);
             $num_rand = mysqli_num_rows($result_rand);
 
-            $sql_list = "SELECT w.*, m.* FROM Watchlist w INNER JOIN Media m ON w.media_id=m.media_id WHERE m.media_status=1 AND w.user_id='".$_SESSION['user_id']."'";
+            $sql_list = "SELECT w.media_id, m.media_img FROM Watchlist w INNER JOIN Media m ON w.media_id=m.media_id WHERE m.media_status=1 AND w.user_id='".$_SESSION['user_id']."'";
             $result_list = mysqli_query($dbcon, $sql_list);
 
             $watchlist = [];
