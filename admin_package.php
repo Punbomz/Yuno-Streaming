@@ -1,6 +1,6 @@
 <?php require('connect.php') ?>
 
-<?php if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) { ?>
+<?php if(isset($_SESSION['logined']) and $_SESSION['user_lv']==1) { ?>
 
     <!DOCTYPE html>
     <html lang="th">
@@ -67,7 +67,15 @@
             </div>
 
             <?php
-                $sql_income = "SELECT ph.user_id, u.user_name,";
+                $sql_income = "SELECT 
+                                summary.user_id,
+                                u.user_name,
+                                summary.Basic,
+                                summary.Standard,
+                                summary.Premium,
+                                summary.total_revenue
+                            FROM (
+                                SELECT ph.user_id,";
                 
                 foreach($packages as $package) {
                     $sql_income .= "SUM(CASE WHEN pk.package_name = '".$package."' THEN pk.price ELSE 0 END) AS '".$package."',";
@@ -77,7 +85,9 @@
                     FROM Payment_History ph
                     JOIN Package pk ON ph.package_name = pk.package_name
                     JOIN User u ON u.user_id = ph.user_id
-                    GROUP BY ph.user_id";
+                    GROUP BY ph.user_id
+                    ) AS summary
+                    JOIN User u ON summary.user_id = u.user_id";
                 $result_income = mysqli_query($dbcon, $sql_income);
                 $num_pk = mysqli_num_rows($result_income);
             ?>

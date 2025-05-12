@@ -47,7 +47,7 @@
                 $sql.=" ORDER BY m.media_id ASC";
             } else if($_GET['so']==3) {
                 $sql.=" ORDER BY v.Views ASC";
-            } else if($_GET['so']==3) {
+            } else if($_GET['so']==4) {
                 $sql.=" ORDER BY v.Views DESC";
             }
         }

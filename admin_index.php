@@ -65,20 +65,21 @@
         ?>
 
         <?php
-            $pk_sql = "SELECT * FROM Package ORDER BY price ASC";
-            $pk_result = mysqli_query($dbcon, $pk_sql);
-            $packages = [];
-            foreach($pk_result as $pk) {
-                array_push($packages, $pk['package_name']);
-            }
-
             $data = [["Package Name", "Users"]];
-            $sql_pk = "SELECT up.package_name, COUNT(up.user_id) AS total_user
-                FROM User_Package up
-                JOIN User u ON u.user_id = up.user_id
-                WHERE u.user_lv = 0 AND MONTH(up.package_start) = $month AND YEAR(up.package_end) = $year
-                GROUP BY up.package_name
-                ORDER BY total_user ASC";
+            $sql_pk = "SELECT p.package_name, IFNULL(up_stats.total_user, 0) AS total_user
+                        FROM Package p
+                        LEFT JOIN (
+                            SELECT up.package_name, COUNT(up.user_id) AS total_user
+                            FROM User_Package up
+                            JOIN User u ON u.user_id = up.user_id
+                            WHERE u.user_lv = 0
+                            AND MONTH(up.package_start) = $month
+                            AND YEAR(up.package_end) = $year
+                            GROUP BY up.package_name
+                        ) AS up_stats
+                        ON p.package_name = up_stats.package_name
+                        ORDER BY total_user ASC
+                    ";
 
             $result_pk = mysqli_query($dbcon, $sql_pk);
 
@@ -178,9 +179,11 @@
             <div class="position-relative m-4" style="width: 300px; text-align: center;">
                 <div class="row">
                     <a href="admin_media.php" class="btn btn-warning mb-5 mt-5" style="width: 300px;"><b>จัดการมีเดีย</b></a>
-                    <a href="admin_package.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแพ็คเกจ</b></a>
-                    <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการผู้ใช้</b></a>
-                    <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแอดมิน</b></a>
+                    <?php if($_SESSION['user_lv']==1) { ?>
+                        <a href="admin_package.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแพ็คเกจ</b></a>
+                        <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการผู้ใช้</b></a>
+                        <a href="admin_user.php" class="btn btn-warning mb-5" style="width: 300px;"><b>จัดการแอดมิน</b></a>
+                    <?php } ?>
                 </div>
             </div>
         </div>

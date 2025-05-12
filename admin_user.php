@@ -1,6 +1,6 @@
 <?php require('connect.php') ?>
 
-<?php if(isset($_SESSION['logined']) and ($_SESSION['user_lv']==1 or $_SESSION['user_lv']==2)) { ?>
+<?php if(isset($_SESSION['logined']) and $_SESSION['user_lv']==1) { ?>
 
 <!DOCTYPE html>
 <html lang="th">
