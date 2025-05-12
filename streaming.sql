@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: May 08, 2025 at 08:14 PM
+-- Generation Time: May 12, 2025 at 03:39 PM
 -- Server version: 9.2.0
 -- PHP Version: 8.2.27
 
@@ -31,18 +31,6 @@ CREATE TABLE `Genre` (
   `genre_id` int NOT NULL,
   `genre_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Genre`
---
-
-INSERT INTO `Genre` (`genre_id`, `genre_name`) VALUES
-(1, 'Sci-Fi'),
-(2, 'Fantasy'),
-(3, 'Action'),
-(4, 'Horror'),
-(5, 'Musical'),
-(6, 'Thriller');
 
 -- --------------------------------------------------------
 
@@ -72,8 +60,6 @@ CREATE TABLE `Media` (
   `media_rate` int NOT NULL COMMENT '1 = Kids\r\n2 = Everyone\r\n3 = 13+\r\n4 = 15+\r\n5 = 18+',
   `type_id` int NOT NULL,
   `media_img` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `actors` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `directors` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `media_status` tinyint(1) NOT NULL COMMENT '0 = Stop\r\n1 = Showing'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -87,6 +73,28 @@ CREATE TABLE `Medias_Genre` (
   `genre_id` int NOT NULL,
   `media_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Media_Actor`
+--
+
+CREATE TABLE `Media_Actor` (
+  `media_id` int NOT NULL,
+  `actor_name` varchar(200) COLLATE utf8mb4_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Media_Director`
+--
+
+CREATE TABLE `Media_Director` (
+  `media_id` int NOT NULL,
+  `director_name` varchar(200) COLLATE utf8mb4_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- --------------------------------------------------------
 
@@ -115,15 +123,6 @@ CREATE TABLE `Package` (
   `screens` int NOT NULL,
   `resolution` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Package`
---
-
-INSERT INTO `Package` (`package_name`, `price`, `devices`, `screens`, `resolution`) VALUES
-('Basic', 99, 'มือถือ, แท็บเล็ต', 1, 'HD'),
-('Premium', 499, 'มือถือ, แท็บเล็ต, คอมพิวเตอร์, ทีวี', 4, '4K'),
-('Standard', 199, 'มือถือ, แท็บเล็ต, คอมพิวเตอร์', 2, 'SD');
 
 -- --------------------------------------------------------
 
@@ -156,17 +155,6 @@ CREATE TABLE `Payment_History` (
   `price` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `Payment_History`
---
-
-INSERT INTO `Payment_History` (`phistory_id`, `user_id`, `package_name`, `payment_datetime`, `payment_id`, `price`) VALUES
-(5, 7, 'Standard', '2025-05-06 09:06:56', 1, 199),
-(6, 7, 'Premium', '2025-05-06 09:07:35', 1, 499),
-(7, 7, 'Premium', '2025-05-06 09:07:54', 1, 800),
-(8, 7, 'Basic', '2025-05-06 10:15:30', 1, 99),
-(9, 8, 'Premium', '2025-05-07 17:24:06', 5, 499);
-
 -- --------------------------------------------------------
 
 --
@@ -177,15 +165,6 @@ CREATE TABLE `Type` (
   `type_id` int NOT NULL,
   `type_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Type`
---
-
-INSERT INTO `Type` (`type_id`, `type_name`) VALUES
-(1, 'ซีรีส์'),
-(2, 'ภาพยนตร์'),
-(3, 'รายการทีวี');
 
 -- --------------------------------------------------------
 
@@ -199,20 +178,30 @@ CREATE TABLE `User` (
   `user_password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `user_email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `user_birthdate` date DEFAULT NULL,
-  `package_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `user_lv` tinyint NOT NULL COMMENT 'user = 0\r\nmain admin = 1\r\nmedia admin = 2',
   `register_date` date NOT NULL,
-  `package_start` date DEFAULT NULL,
-  `user_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '-',
-  `package_end` date DEFAULT NULL
+  `user_img` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '-'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `User`
 --
 
-INSERT INTO `User` (`user_id`, `user_name`, `user_password`, `user_email`, `user_birthdate`, `package_name`, `user_lv`, `register_date`, `package_start`, `user_img`, `package_end`) VALUES
-(3, 'Admin', '$2y$10$sM2/otboynXGJ0630AdCbeimWDXL5P21iN1uhXV5gScglw9XUOsye', 'Admin@gmail.com', '2004-09-24', NULL, 1, '2025-05-03', NULL, '-', NULL);
+INSERT INTO `User` (`user_id`, `user_name`, `user_password`, `user_email`, `user_birthdate`, `user_lv`, `register_date`, `user_img`) VALUES
+(3, 'Admin', '$2y$10$sM2/otboynXGJ0630AdCbeimWDXL5P21iN1uhXV5gScglw9XUOsye', 'Admin@gmail.com', '2004-09-24', 1, '2025-05-03', '-');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `User_Package`
+--
+
+CREATE TABLE `User_Package` (
+  `user_id` int NOT NULL,
+  `package_name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `package_start` date NOT NULL,
+  `package_end` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- --------------------------------------------------------
 
@@ -224,14 +213,6 @@ CREATE TABLE `Watchlist` (
   `user_id` int NOT NULL,
   `media_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `Watchlist`
---
-
-INSERT INTO `Watchlist` (`user_id`, `media_id`) VALUES
-(8, 30),
-(8, 67);
 
 --
 -- Indexes for dumped tables
@@ -260,6 +241,18 @@ ALTER TABLE `Media`
 --
 ALTER TABLE `Medias_Genre`
   ADD PRIMARY KEY (`genre_id`,`media_id`);
+
+--
+-- Indexes for table `Media_Actor`
+--
+ALTER TABLE `Media_Actor`
+  ADD KEY `media_id` (`media_id`);
+
+--
+-- Indexes for table `Media_Director`
+--
+ALTER TABLE `Media_Director`
+  ADD KEY `media_id` (`media_id`);
 
 --
 -- Indexes for table `Media_Files`
@@ -311,43 +304,59 @@ ALTER TABLE `Watchlist`
 -- AUTO_INCREMENT for table `Genre`
 --
 ALTER TABLE `Genre`
-  MODIFY `genre_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `genre_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Media`
 --
 ALTER TABLE `Media`
-  MODIFY `media_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `media_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Media_Files`
 --
 ALTER TABLE `Media_Files`
-  MODIFY `file_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `file_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Payment`
 --
 ALTER TABLE `Payment`
-  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Payment_History`
 --
 ALTER TABLE `Payment_History`
-  MODIFY `phistory_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `phistory_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `Type`
 --
 ALTER TABLE `Type`
-  MODIFY `type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `type_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Media_Actor`
+--
+ALTER TABLE `Media_Actor`
+  ADD CONSTRAINT `Media_Actor_ibfk_1` FOREIGN KEY (`media_id`) REFERENCES `Media` (`media_id`);
+
+--
+-- Constraints for table `Media_Director`
+--
+ALTER TABLE `Media_Director`
+  ADD CONSTRAINT `media_id` FOREIGN KEY (`media_id`) REFERENCES `Media` (`media_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
