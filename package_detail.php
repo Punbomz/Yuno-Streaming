@@ -23,7 +23,7 @@
             <h1 style="margin-top: 100px;">แพ็คเกจ</h1>
 
             <?php
-                $sql = "SELECT package_name, package_start, package_end FROM User WHERE user_id='".$_SESSION['user_id']."'";
+                $sql = "SELECT package_name, package_start, package_end FROM User_Package WHERE user_id='".$_SESSION['user_id']."'";
                 $result = mysqli_query($dbcon, $sql);
                 $row = mysqli_fetch_assoc($result);
             ?>

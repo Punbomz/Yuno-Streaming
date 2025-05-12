@@ -73,11 +73,11 @@
             }
 
             $data = [["Package Name", "Users"]];
-            $sql_pk = "SELECT ph.package_name, COUNT(ph.user_id) AS total_user
-                FROM Payment_History ph
-                JOIN User u ON u.user_id = ph.user_id
-                WHERE u.user_lv = 0 AND u.package_name=ph.package_name AND MONTH(ph.payment_datetime) = $month AND YEAR(ph.payment_datetime) = $year
-                GROUP BY ph.package_name
+            $sql_pk = "SELECT up.package_name, COUNT(up.user_id) AS total_user
+                FROM User_Package up
+                JOIN User u ON u.user_id = up.user_id
+                WHERE u.user_lv = 0 AND MONTH(up.package_start) = $month AND YEAR(up.package_end) = $year
+                GROUP BY up.package_name
                 ORDER BY total_user ASC";
 
             $result_pk = mysqli_query($dbcon, $sql_pk);

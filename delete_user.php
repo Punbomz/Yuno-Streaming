@@ -32,6 +32,9 @@
             die('<script>alert("ลบผู้ใช้ไม่สำเร็จ!"); history.back();</script>');
         }
 
+        $sql = "DELETE FROM User_Package WHERE user_id='$id'";
+        $result = mysqli_query($dbcon, $sql);
+
         echo "<script>alert('ลบผู้ใช้สำเร็จ!'); history.back();</script>";
 } else {
     echo "<script>location.href='index.php';</script>";

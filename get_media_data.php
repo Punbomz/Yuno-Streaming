@@ -8,6 +8,22 @@
         $sql = "SELECT * FROM Media WHERE media_id = '$media_id'";
         $result = mysqli_query($dbcon, $sql);
 
+        $sqld = "SELECT director_name FROM Media_Director WHERE media_id = '$media_id'";
+        $resultd = mysqli_query($dbcon, $sqld);
+        $dc = [];
+        foreach($resultd as $rowd) {
+            array_push($dc, $rowd['director_name']);
+        }
+        $directors = implode(",", $dc);
+
+        $sqla = "SELECT actor_name FROM Media_Actor WHERE media_id = '$media_id'";
+        $resulta = mysqli_query($dbcon, $sqla);
+        $ac = [];
+        foreach($resulta as $rowa) {
+            array_push($ac, $rowa['actor_name']);
+        }
+        $actors = implode(",", $ac);
+
         if ($data = $result->fetch_assoc()) {
 
             $sql2 = "SELECT g.genre_name 
@@ -115,6 +131,9 @@
                 $row_file = mysqli_fetch_assoc($result_file);
                 $data['duration'] = $row_file['Episodes']." ตอน";
             }
+
+            $data['directors'] = $directors;
+            $data['actors'] = $actors;
 
             echo json_encode($data);
         } else {

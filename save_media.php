@@ -36,15 +36,35 @@
             }
         }
 
-        $sql = "INSERT INTO Media(media_title, media_desc, media_release, media_rate, type_id, media_img, actors, directors, media_status)
-                VALUES('$title', '$detail', '$release', '$rate', '$t', '$pic', '$actor', '$director', 1)";
+        $sql = "INSERT INTO Media(media_title, media_desc, media_release, media_rate, type_id, media_img, media_status)
+                VALUES('$title', '$detail', '$release', '$rate', '$t', '$pic', 1)";
 		$result = mysqli_query($dbcon, $sql);
-
+        
         if(!$result) {
             die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
         }
 
         $media_id = mysqli_insert_id($dbcon);
+        
+        $actor = explode(",", $actor);
+        $actor = array_unique($actor);
+        foreach($actor as $ac) {
+            $sql = "INSERT INTO Media_Actor(media_id, actor_name) VALUES('$media_id', '$ac')";
+            $result = mysqli_query($dbcon, $sql);
+            if(!$result) {
+                die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
+            }
+        }
+
+        $director = explode(",", $director);
+        $director = array_unique($director);
+        foreach($director as $dc) {
+            $sql = "INSERT INTO Media_Director(media_id, director_name) VALUES('$media_id', '$dc')";
+            $result = mysqli_query($dbcon, $sql);
+            if(!$result) {
+                die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
+            }
+        }
 
         if(isset($_POST['newgenre'])) {
             $newgenres = $_POST['newgenre'];

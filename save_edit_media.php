@@ -3,6 +3,12 @@
         extract($_POST);
         extract($_GET);
 
+        $sql = "DELETE FROM Media_Actor WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
+
+        $sql = "DELETE FROM Media_Director WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
+
         $durations = $_POST['duration'];
 
         $totalMinutes = [];
@@ -74,11 +80,31 @@
         }
 
 
-        $sql = "UPDATE Media SET media_title = '$title', media_desc = '$detail', media_release = '$release', media_rate = '$rate', type_id = '$t', media_img = '$pic', actors = '$actor', directors = '$director' WHERE media_id = '$id'";
+        $sql = "UPDATE Media SET media_title = '$title', media_desc = '$detail', media_release = '$release', media_rate = '$rate', type_id = '$t', media_img = '$pic' WHERE media_id = '$id'";
 		$result = mysqli_query($dbcon, $sql);
 
         if(!$result) {
             die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
+        }
+
+        $actor = explode(",", $actor);
+        $actor = array_unique($actor);
+        foreach($actor as $ac) {
+            $sql = "INSERT INTO Media_Actor(media_id, actor_name) VALUES('$id', '$ac')";
+            $result = mysqli_query($dbcon, $sql);
+            if(!$result) {
+                die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
+            }
+        }
+
+        $director = explode(",", $director);
+        $director = array_unique($director);
+        foreach($director as $dc) {
+            $sql = "INSERT INTO Media_Director(media_id, director_name) VALUES('$id', '$dc')";
+            $result = mysqli_query($dbcon, $sql);
+            if(!$result) {
+                die('<script>alert("บันทึกข้อมูลไม่สำเร็จ!"); history.back();</script>');
+            }
         }
 
         $sql_dgenre = "DELETE FROM Medias_Genre WHERE media_id='$id'";

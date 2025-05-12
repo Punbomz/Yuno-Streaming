@@ -34,23 +34,23 @@
 
         <div class="container justify-content-center text-center mt-3">
             <?php
-                $sql_user = "SELECT user_id, user_name, user_email, package_name FROM User WHERE user_lv=0";
+                $sql_user = "SELECT u.user_id, u.user_name, u.user_email, up.package_name FROM User u INNER JOIN User_Package up ON u.user_id=up.user_id WHERE u.user_lv=0";
 
                 if(isset($_GET['srch']) and $_GET['srch']!='') {
-                    $sql_user.=" AND user_name LIKE '%".$_GET['srch']."%' OR user_email LIKE '%".$_GET['srch']."%'";
+                    $sql_user.=" AND u.user_name LIKE '%".$_GET['srch']."%' OR u.user_email LIKE '%".$_GET['srch']."%'";
                 }
 
                 if(isset($_GET['upa']) and $_GET['upa']!='') {
-                    $sql_user.=" AND package_name='".$_GET['upa']."'";
+                    $sql_user.=" AND up.package_name='".$_GET['upa']."'";
                 }
 
                 if(isset($_GET['uso']) and $_GET['uso']!='') {
                     if($_GET['uso']==0) {
-                        $sql_user.=" ORDER BY user_name ASC";
+                        $sql_user.=" ORDER BY u.user_name ASC";
                     } else if($_GET['uso']==1) {
-                        $sql_user.=" ORDER BY user_id DESC";
+                        $sql_user.=" ORDER BY u.user_id DESC";
                     } else if($_GET['uso']==2) {
-                        $sql_user.=" ORDER BY user_id ASC";
+                        $sql_user.=" ORDER BY u.user_id ASC";
                     }
                 }
 
@@ -68,7 +68,7 @@
                         <select name="upa" class="form-select text-center m-4" style="width: 200px;" onchange="window.location.href='admin_user.php?srch=<?php echo $_GET['srch']; ?>&uso=<?php echo $_GET['uso']; ?>&up=<?php echo $_GET['up']; ?>&ups=<?php echo $_GET['ups']; ?>&aso=<?php echo $_GET['aso']; ?>&ap=<?php echo $_GET['ap']; ?>&aps=<?php echo $_GET['aps']; ?>&lv=<?php echo $_GET['lv']; ?>&upa=' + this.value;">
                             <option value=''>แพ็คเกจ</option>
                             <?php
-                                $sql1 = "SELECT * FROM Package ORDER BY package_name";
+                                $sql1 = "SELECT * FROM Package ORDER BY price";
                                 $result1 = mysqli_query($dbcon, $sql1);
                                 foreach($result1 as $row1) { ?>
                                     <option value="<?php echo $row1['package_name']; ?>" <?php if($row1['package_name']==$_GET['upa']) echo 'selected'; ?>><?php echo $row1['package_name']; ?></option>

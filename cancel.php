@@ -3,7 +3,7 @@
 <?php
     if(isset($_SESSION['logined']) and $_SESSION['user_lv']==0) {
 
-        $sql = "UPDATE User SET package_name=NULL, package_start=NULL, package_end=NULL WHERE user_id='".$_SESSION['user_id']."'";    
+        $sql = "DELETE FROM User_Package WHERE user_id='".$_SESSION['user_id']."'";    
         $result = mysqli_query($dbcon, $sql);
 
         if(!$result) {

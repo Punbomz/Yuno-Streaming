@@ -44,6 +44,12 @@
         if(!$result4) {
             die('<script>alert("ลบมีเดียไม่สำเร็จ!"); history.back();</script>');
         }
+        
+        $sql = "DELETE FROM Media_Actor WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
+
+        $sql = "DELETE FROM Media_Director WHERE media_id = '$id'";
+        $result = mysqli_query($dbcon, $sql);
 
         echo "<script>alert('ลบมีเดียสำเร็จ!'); history.back();</script>";
 } else {

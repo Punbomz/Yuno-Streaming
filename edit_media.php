@@ -26,6 +26,22 @@
             $sql = "SELECT * FROM Media WHERE media_id = '".$_GET['id']."'";
             $result = mysqli_query($dbcon, $sql);
             $row = mysqli_fetch_assoc($result);
+
+            $sqld = "SELECT director_name FROM Media_Director WHERE media_id = '".$_GET['id']."'";
+            $resultd = mysqli_query($dbcon, $sqld);
+            $dc = [];
+            foreach($resultd as $rowd) {
+                array_push($dc, $rowd['director_name']);
+            }
+            $directors = implode(",", $dc);
+
+            $sqla = "SELECT actor_name FROM Media_Actor WHERE media_id = '".$_GET['id']."'";
+            $resulta = mysqli_query($dbcon, $sqla);
+            $ac = [];
+            foreach($resulta as $rowa) {
+                array_push($ac, $rowa['actor_name']);
+            }
+            $actors = implode(",", $ac);
         ?>
 
         <form action="save_edit_media.php?id=<?php echo $row['media_id']; ?>" method="post" enctype="multipart/form-data">
@@ -118,7 +134,7 @@
                         <div class="row mt-3 justify-content-center">
                             <div class="w-50">
                                 <label class="form-label">ผู้กำกับ</label>
-                                <input type="text" name="director" class="form-control mt-2" placeholder="ระบุผู้กำกับ" value="<?php echo $row['directors']; ?>" required>
+                                <input type="text" name="director" class="form-control mt-2" placeholder="ระบุผู้กำกับ" value="<?php echo $directors; ?>" required>
                             </div>
                         </div>
 
@@ -145,7 +161,7 @@
                         <div class="row mt-3 justify-content-center">
                             <div class="w-50">
                                 <label class="form-label">นักแสดง</label>
-                                <textarea rows="4" name="actor" class="form-control mt-2" placeholder="ระบุนักแสดง" required><?php echo $row['actors']; ?></textarea>
+                                <textarea rows="4" name="actor" class="form-control mt-2" placeholder="ระบุนักแสดง" required><?php echo $actors; ?></textarea>
                             </div>
                         </div>
                     </div>

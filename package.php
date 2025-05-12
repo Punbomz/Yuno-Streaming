@@ -77,7 +77,7 @@
       <h1 style="margin-top: 100px;">แพ็คเกจและการชำระเงิน</h1>
 
       <?php
-        $sql = "SELECT * FROM Package WHERE package_name = (SELECT package_name FROM User WHERE user_id='".$_SESSION['user_id']."')";
+        $sql = "SELECT * FROM Package WHERE package_name = (SELECT package_name FROM User_Package WHERE user_id='".$_SESSION['user_id']."')";
         $result = mysqli_query($dbcon, $sql);
         $row = mysqli_fetch_assoc($result);
       ?>
